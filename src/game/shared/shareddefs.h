@@ -95,10 +95,13 @@ public:
 
 #define MAX_CLIMB_SPEED		200
 
-
-	#define TIME_TO_DUCK_MSECS		400
- 
-#define TIME_TO_UNDUCK_MSECS		200
+#ifdef CRUN_DLL
+#define TIME_TO_DUCK_MSECS		150.0f 
+#define TIME_TO_UNDUCK_MSECS	150.0f
+#else
+#define TIME_TO_DUCK_MSECS		400 
+#define TIME_TO_UNDUCK_MSECS	200
+#endif
 
 inline float FractionDucked( int msecs )
 {

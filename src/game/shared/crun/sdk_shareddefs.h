@@ -22,13 +22,14 @@
 //========================
 
 // For GetGameDescription(). Mostly for MP.
-#define GAMENAME "Template"
+#define GAMENAME "CRUN"
 
 //========================
 // PLAYER RELATED OPTIONS
 //========================
 // PLAYER_HEALTH_REGEN : Regen the player's health much like it does in Portal/COD
 // #define PLAYER_HEALTH_REGEN
+#define PLAYER_HEALTH_REGEN
 // PLAYER_MOUSEOVER_HINTS : When the player has their crosshair over whatever we put in UpdateMouseoverHints() it will do whatever you put there.
 // this is how the hint system works in CSS. Since we have an instructor system, this methoid is obsolete, but the setup is still here.
 // #define PLAYER_MOUSEOVER_HINTS
@@ -51,7 +52,7 @@
 // WORLD
 //========================
 //#define WORLD_USE_HL2_GRAVITY : Use gravity settings much like HL2 or Portal.
-#define WORLD_USE_HL2_GRAVITY
+//#define WORLD_USE_HL2_GRAVITY
 //------------------
 
 #endif // SDK_SHAREDDEFS_H

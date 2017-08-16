@@ -2527,6 +2527,100 @@ void CTriggerTeleport::Touch( CBaseEntity *pOther )
 
 LINK_ENTITY_TO_CLASS( info_teleport_destination, CPointEntity );
 
+#ifdef CRUN_DLL
+////////////////////////
+// CRUN TRIGGERS
+////////////////////////
+
+#include "sdk_player.h"
+
+//-----------------------------------------------------------------------------
+// Purpose: If the player touches the trigger they can only walk.
+//-----------------------------------------------------------------------------
+
+class CTriggerForceWalk : public CBaseTrigger
+{
+public:
+	DECLARE_CLASS(CTriggerForceWalk, CBaseTrigger);
+
+	virtual void Spawn(void);
+
+	virtual void StartTouch(CBaseEntity *pOther);
+	virtual void EndTouch(CBaseEntity *pOther);
+
+	virtual void InputEnable(inputdata_t &inputdata)
+	{
+		m_bDisabled = false;
+	}
+
+	virtual void InputDisable(inputdata_t &inputdata)
+	{
+		m_bDisabled = true;
+	}
+
+	bool	m_bDisabled;		// Initial state
+
+	DECLARE_DATADESC();
+};
+
+BEGIN_DATADESC(CTriggerForceWalk)
+DEFINE_KEYFIELD(m_bDisabled, FIELD_BOOLEAN, "StartDisabled"),
+
+DEFINE_INPUTFUNC(FIELD_VOID, "Enable", InputEnable),
+DEFINE_INPUTFUNC(FIELD_VOID, "Disable", InputDisable),
+END_DATADESC()
+
+LINK_ENTITY_TO_CLASS(trigger_forcewalk, CTriggerForceWalk);
+
+//-----------------------------------------------------------------------------
+// Purpose: Called when spawning, after keyvalues have been set.
+//-----------------------------------------------------------------------------
+void CTriggerForceWalk::Spawn(void)
+{
+	InitTrigger();
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: Tells the player class it can only walk.
+// Input  : pOther - 
+//-----------------------------------------------------------------------------
+void CTriggerForceWalk::StartTouch(CBaseEntity *pOther)
+{
+	if (m_bDisabled)
+		return;
+
+	// Only save on clients
+	if (!pOther->IsPlayer())
+		return;
+
+	CSDKPlayer* crunPlayer = dynamic_cast<CSDKPlayer*>(pOther);
+	if (crunPlayer)
+		crunPlayer->m_bCanOnlyWalk = true;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Tells the player class it can run again.
+// Input  : pOther - 
+//-----------------------------------------------------------------------------
+void CTriggerForceWalk::EndTouch(CBaseEntity *pOther)
+{
+	if (m_bDisabled)
+		return;
+
+	// Only save on clients
+	if (!pOther->IsPlayer())
+		return;
+
+	CSDKPlayer* crunPlayer = dynamic_cast<CSDKPlayer*>(pOther);
+	if (crunPlayer)
+		crunPlayer->m_bCanOnlyWalk = false;
+}
+
+////////////////////////
+// END OF CRUN TRIGGERS
+////////////////////////
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Saves the game when the player touches the trigger. Can be enabled or disabled

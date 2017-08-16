@@ -44,7 +44,11 @@ ConVar g_debug_physcannon( "g_debug_physcannon", "0" );
 ConVar playerpickup_maxmass( "playerpickup_maxmass", "250" );
 ConVar player_throwforce( "player_throwforce", "1000" );
 
+#ifndef CRUN_DLL
 extern ConVar player_walkspeed;
+#else
+extern ConVar crun_runspeed;
+#endif
 
 // -------------------------------------------------------------------------
 //  Physcannon trace filter to handle special cases
@@ -929,7 +933,11 @@ void CGrabController::DetachEntity( bool bClearVelocity )
 			}
 			else
 			{
+#ifndef CRUN_DLL
 				ClampPhysicsVelocity( pPhys, player_walkspeed.GetFloat() * 1.5f, 2.0f * 360.0f );
+#else
+				ClampPhysicsVelocity( pPhys, crun_runspeed.GetFloat() * 1.5f, 2.0f * 360.0f );
+#endif
 			}
 
 		}

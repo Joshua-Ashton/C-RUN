@@ -1,3 +1,6 @@
+#ifndef CRUN_PLAYER_H
+#define CRUN_PLAYER_H
+
 #include "cbase.h"
 #include "predicted_viewmodel.h"
 #include "ai_speech.h"			// For expresser host
@@ -8,9 +11,6 @@
 // Pretty much values here can be changed.
 // Should be self explanitory.
 //-----------------------------
-
-// How fast can the player walk?
-#define PLAYER_WALK_SPEED player_walkspeed.GetFloat()
 
 // Or pickup limits.
 #define PLAYER_MAX_LIFT_MASS 85
@@ -151,6 +151,8 @@ public:
 	unsigned int m_iDisplayHistoryBits;
 	bool m_bShowHints;
 
+	bool m_bCanOnlyWalk;
+
 	// Hint Flags: These are flags to tick when the hint shows. This prevents players feeling that the game think's they are stupid by
 	// repeating the same hint over, and over.
 	#define DHF_GAME_STARTED		( 1 << 1 )
@@ -197,3 +199,4 @@ inline CSDKPlayer *To_SDKPlayer( CBaseEntity *pEntity )
 #endif
 	return static_cast< CSDKPlayer* >( pEntity );
 }
+#endif

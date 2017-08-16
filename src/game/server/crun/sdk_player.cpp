@@ -30,9 +30,7 @@
 #include "sceneentity.h"
 #include "hintmessage.h"
 #include "items.h"
-
-// Our Player walk speed value.
-ConVar player_walkspeed( "player_walkspeed", "190" );
+#include "sdk_player_shared.h"
 
 // Show annotations?
 ConVar hud_show_annotations( "hud_show_annotations", "1" );
@@ -59,6 +57,7 @@ BEGIN_DATADESC( CSDKPlayer )
 
 	DEFINE_AUTO_ARRAY( m_vecMissPositions, FIELD_POSITION_VECTOR ),
 	DEFINE_FIELD( m_nNumMissPositions, FIELD_INTEGER ),
+	DEFINE_FIELD( m_bCanOnlyWalk, FIELD_BOOLEAN ),
 
 //#ifdef PLAYER_HEALTH_REGEN
 	DEFINE_FIELD( m_fTimeLastHurt, FIELD_TIME )
@@ -73,6 +72,7 @@ END_DATADESC()
 //-----------------------
 CSDKPlayer::CSDKPlayer()
 {
+	m_bCanOnlyWalk = false;
 	m_nNumMissPositions = 0;
 
 	// Set up the hints.
@@ -147,6 +147,7 @@ Class_T  CSDKPlayer::Classify ( void )
 void CSDKPlayer::PreThink()
 {
 	BaseClass::PreThink();
+	HandleSpeedChanges();
 
 	if ( m_pHintMessageQueue )
 		m_pHintMessageQueue->Update();
@@ -434,7 +435,7 @@ void CSDKPlayer::StartWalking( void )
 
 void CSDKPlayer::StopWalking( void )
 {
-	SetMaxSpeed( PLAYER_WALK_SPEED );
+	SetMaxSpeed( PLAYER_RUN_SPEED );
 	m_fIsWalking = false;
 }
 
@@ -443,18 +444,14 @@ void CSDKPlayer::HandleSpeedChanges( void )
 	bool bIsWalking = IsWalking();
 	bool bWantWalking;
 	
-	bWantWalking = true;
+	bWantWalking = m_bCanOnlyWalk || ((m_nButtons & IN_WALK) && !(m_nButtons & IN_DUCK));
 	
 	if( bIsWalking != bWantWalking )
 	{
 		if ( bWantWalking )
-		{
 			StartWalking();
-		}
 		else
-		{
 			StopWalking();
-		}
 	}
 }
 

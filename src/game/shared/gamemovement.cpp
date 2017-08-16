@@ -16,7 +16,13 @@
 	#include "hl_movedata.h"
 #endif
 
-
+#ifdef CRUN_DLL
+#include "sdk_player_shared.h"
+ConVar crun_viewbob("crun_viewbob", "1", FCVAR_ARCHIVE | FCVAR_CLIENTDLL);
+// Our Player walk speed value.
+ConVar crun_runspeed("crun_runspeed", "420");
+ConVar crun_walkspeed("crun_walkspeed", "210");
+#endif
 
 #if (PREDICTION_ERROR_CHECK_LEVEL > 0) && (PREDICTION_ERROR_CHECK_STACKS_FOR_MISSING > 0)
 #include "tier0/stacktools.h"
@@ -2164,6 +2170,17 @@ void CGameMovement::WalkMove( void )
 		return;
 	}
 
+#ifdef CRUN_DLL
+	if (crun_viewbob.GetBool())
+	{
+		float speedAboveWalk = MIN(0, crun_walkspeed.GetFloat() - spd);
+		float runWalkSpeedDiff = crun_runspeed.GetFloat() - crun_walkspeed.GetFloat();
+
+		float viewBob = sinf(gpGlobals->curtime * 15.0f) * (speedAboveWalk / runWalkSpeedDiff);
+		player->ViewPunch(QAngle(viewBob * 0.05f, 0.0f, viewBob * -0.1f));
+	}
+#endif
+
 	// first try just moving to the destination	
 	dest[0] = mv->GetAbsOrigin()[0] + mv->m_vecVelocity[0]*gpGlobals->frametime;
 	dest[1] = mv->GetAbsOrigin()[1] + mv->m_vecVelocity[1]*gpGlobals->frametime;	
@@ -2627,6 +2644,7 @@ bool CGameMovement::CheckJumpButton( void )
 	}
 
 	float flMul;
+#ifndef CRUN_DLL
 	if ( g_bMovementOptimizations )
 	{
 #if defined(HL2_DLL) || defined(HL2_CLIENT_DLL) || defined(WORLD_USE_HL2_GRAVITY)
@@ -2639,6 +2657,7 @@ bool CGameMovement::CheckJumpButton( void )
 
 	}
 	else
+#endif
 	{
 		flMul = sqrt(2 * sv_gravity.GetFloat() * GAMEMOVEMENT_JUMP_HEIGHT);
 	}
@@ -3997,7 +4016,7 @@ void CGameMovement::CategorizePosition( void )
 	// Shooting up really fast.  Definitely not on ground.
 	// On ladder moving up, so not on ground either
 	// NOTE: 145 is a jump.
-#define NON_JUMP_VELOCITY 140.0f
+#define NON_JUMP_VELOCITY 145.0f
 
 	float zvel = mv->m_vecVelocity[2];
 	bool bMovingUp = zvel > 0.0f;
