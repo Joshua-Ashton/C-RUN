@@ -1,0 +1,47 @@
+//-----------------------------------------------------------------------------
+//	SERVER_CRUN.VPC
+//
+//	Project Script
+//-----------------------------------------------------------------------------
+
+$Macro SRCDIR		"..\.."
+$Macro GAMENAME 	"crun"
+
+$Include "$SRCDIR\game\server\server_base.vpc"
+
+$Configuration
+{
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$BASE;.\hl2;$SRCDIR\game\shared\hl2;.\crun;.\multiplayer;$SRCDIR\game\shared\multiplayer;$SRCDIR\game\shared\crun"
+		$PreprocessorDefinitions		"$BASE;SWARM_DLL;CRUN_DLL"
+	}
+}
+
+$Project "Server (CRUN)"
+{
+	$Folder	"Source Files"
+	{
+		$Folder "CRUN"
+		{
+			$File	"$SRCDIR\game\shared\crun\my_shareddefs.h"
+			$File	"$SRCDIR\game\shared\crun\sdk_gamemovement.cpp"
+			$File	"$SRCDIR\game\shared\crun\sdk_gamerules_sp.h"
+			$File	"$SRCDIR\game\shared\crun\sdk_gamerules_sp.cpp"
+			$File	"$SRCDIR\game\shared\crun\sdk_player_shared.h"
+			$File	"$SRCDIR\game\shared\crun\sdk_shareddefs.h"
+			$File	"$SRCDIR\game\shared\crun\sdk_usermessages.cpp"
+			$File	"$SRCDIR\game\shared\crun\sdk_weapon_parse.h"
+			$File	"$SRCDIR\game\shared\crun\sdk_weapon_parse.cpp"
+			
+			$File	"crun\player_pickup_controller.cpp"
+			$File	"crun\sdk_client.cpp"
+			$File	"crun\sdk_eventlog.cpp"
+			$File	"crun\sdk_player.h"
+			$File	"crun\sdk_player.cpp"
+			$File	"crun\sdk_playermove.cpp"
+			$File	"crun\test_entity.cpp"
+			$File	"crun\weapon_cubemap.cpp"
+		}
+	}
+}

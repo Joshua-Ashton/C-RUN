@@ -1,0 +1,130 @@
+//-----------------------------------------------------------------------------
+//	CLIENT_CRUN.VPC
+//
+//	Project Script
+//-----------------------------------------------------------------------------
+
+$Macro SRCDIR		"..\.."
+$Macro GAMENAME 	"crun"
+
+$Include "$SRCDIR\game\client\client_base.vpc"
+
+$Configuration
+{
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$BASE;.\hl2;.\crun;.\crun\vgui;.\gameui;$SRCDIR\game\client\crun\gameui;..\statemachine;$SRCDIR\game\shared\multiplayer;.\multiplayer;$SRCDIR\game\shared\crun"
+		$PreprocessorDefinitions		"$BASE;SWARM_DLL;CRUN_DLL;GAMEUI_EMBEDDED;GAMEUI_EXPORTS"
+	}
+}
+
+$Project "Client (CRUN)"
+{
+	$Folder "Source Files"
+	{
+		$Folder	"CRUN"
+		{
+			$File	"$SRCDIR\game\shared\crun\sdk_gamemovement.cpp"
+			$File	"$SRCDIR\game\shared\crun\sdk_gamerules_sp.h"
+			$File	"$SRCDIR\game\shared\crun\sdk_gamerules_sp.cpp"
+			$File	"$SRCDIR\game\shared\crun\sdk_shareddefs.h"
+			$File	"$SRCDIR\game\shared\crun\sdk_usermessages.cpp"
+			$File	"$SRCDIR\game\shared\crun\sdk_weapon_parse.h"
+			$File	"$SRCDIR\game\shared\crun\sdk_weapon_parse.cpp"
+			
+			$File	"crun\clientmode_sdk.h"
+			$File	"crun\clientmode_sdk.cpp"
+			$File	"crun\c_sdk_player.h"
+			$File	"crun\c_sdk_player.cpp"
+			$File	"crun\c_weapon__stubs.cpp"
+			
+			$File	"crun\hud_crosshair_crun.cpp"
+			$File	"crun\hud_damageindicator.cpp"
+			$File	"crun\hud_developer.cpp"
+			$File	"crun\hud_weaponselection.cpp"
+			$File	"crun\sdk_fx.cpp"
+			$File	"crun\sdk_in_main.cpp"
+			$File	"crun\sdk_prediction.cpp"
+			$File	"crun\c_sdk_lesson.cpp"
+						
+			$Folder	"VGUI"
+			{				
+				$File	"crun\vgui\nb_button.h"
+				$File	"crun\vgui\nb_header_footer.h"
+				$File	"crun\vgui\sdk_loading_panel.h"
+				$File	"crun\vgui\sdk_logo_panel.h"
+				$File	"crun\vgui\nb_button.cpp"
+				$File	"crun\vgui\nb_header_footer.cpp"
+				$File	"crun\vgui\sdk_loading_panel.cpp"
+				$File	"crun\vgui\sdk_logo_panel.cpp"
+				$File	"crun\vgui_rootpanel_sdk.cpp"
+			}
+		
+			$Folder	"GameUI"
+			{
+				$File	"crun\GameUI\basemodframe.h"
+				$File	"crun\GameUI\gamemodes.h"
+				$File	"crun\GameUI\optionsmousedialog.h"
+				$File	"crun\GameUI\UIGameData.h"
+				
+				$File	"crun\GameUI\vaddonassociation.h"
+				$File	"crun\GameUI\vaddons.h"
+				$File	"crun\GameUI\vattractscreen.h"
+				$File	"crun\GameUI\vaudio.h"
+				$File	"crun\GameUI\vaudiovideo.h"
+				$File	"crun\GameUI\vcustomcampaigns.h"
+				$File	"crun\GameUI\vdropdownmenu.h"
+				$File	"crun\GameUI\vflyoutmenu.h"
+				$File	"crun\GameUI\vfooterpanel.h"
+				$File	"crun\GameUI\vgenericconfirmation.h"
+				$File	"crun\GameUI\vgenericpanellist.h"
+				$File	"crun\GameUI\vgetlegacydata.h"
+				$File	"crun\GameUI\vhybridbutton.h"
+				$File	"crun\GameUI\vingamemainmenu.h"
+				$File	"crun\GameUI\vkeyboard.h"
+				$File	"crun\GameUI\vkeyboardmouse.h"
+				$File	"crun\GameUI\vloadingprogress.h"
+				$File	"crun\GameUI\vmainmenu.h"
+				$File	"crun\GameUI\vmouse.h"
+				$File	"crun\GameUI\vslidercontrol.h"
+				$File	"crun\GameUI\vtransitionscreen.h"
+				$File	"crun\GameUI\vvideo.h"
+				
+				$File	"crun\GameUI\basemodframe.cpp"
+				$File	"crun\GameUI\BaseModPanel.cpp"
+				$File	"crun\GameUI\gamemodes.cpp"
+				$File	"crun\GameUI\optionsmousedialog.cpp"
+				$File	"crun\GameUI\vaddonassociation.cpp"
+				$File	"crun\GameUI\vaddons.cpp"
+				$File	"crun\GameUI\vattractscreen.cpp"
+				$File	"crun\GameUI\vaudio.cpp"
+				$File	"crun\GameUI\vaudiovideo.cpp"
+				$File	"crun\GameUI\vcustomcampaigns.cpp"
+				$File	"crun\GameUI\vdropdownmenu.cpp"
+				$File	"crun\GameUI\vflyoutmenu.cpp"
+				$File	"crun\GameUI\vfooterpanel.cpp"
+				$File	"crun\GameUI\vgenericconfirmation.cpp"
+				$File	"crun\GameUI\vgenericpanellist.cpp"
+				$File	"crun\GameUI\vgetlegacydata.cpp"
+				$File	"crun\GameUI\vhybridbutton.cpp"
+				$File	"crun\GameUI\vingamemainmenu.cpp"
+				$File	"crun\GameUI\vkeyboard.cpp"
+				$File	"crun\GameUI\vkeyboardmouse.cpp"
+				$File	"crun\GameUI\vloadingprogress.cpp"
+				$File	"crun\GameUI\vmainmenu.cpp"
+				$File	"crun\GameUI\vmenubackground.cpp"
+				$File	"crun\GameUI\vmouse.cpp"
+				$File	"crun\GameUI\vslidercontrol.cpp"
+				$File	"crun\GameUI\vtransitionscreen.cpp"
+				$File	"crun\GameUI\vvideo.cpp"
+				$File	"crun\GameUI\UIGameData.cpp"
+			}
+		}
+	}
+
+	$Folder	"Link Libraries"
+	{
+		$Lib "$LIBCOMMON\jpeglib"
+		$Lib "$LIBPUBLIC\vpklib"
+	}
+}

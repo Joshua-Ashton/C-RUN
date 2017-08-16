@@ -7,6 +7,7 @@ $Project "client"
 	"game\client\client_hl2.vpc"		[$HL2]
 	"game\client\client_hl2_template.vpc"		[$HL2_TEMPLATE]
 	"game\client\client_episodic.vpc"		[$HL2_EPISODIC]
+	"game\client\client_crun.vpc"		[$CRUN]
 }
 
 $Project "server"
@@ -18,6 +19,7 @@ $Project "server"
 	"game\server\server_hl2.vpc"		[$HL2]
 	"game\server\server_hl2_template.vpc"		[$HL2_TEMPLATE]
 	"game\server\server_episodic.vpc"		[$HL2_EPISODIC]
+	"game\server\server_crun.vpc"		[$CRUN]
 }
 
 

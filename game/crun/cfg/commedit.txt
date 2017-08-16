@@ -1,0 +1,19 @@
+CommEdit
+{
+    toolwindow
+    {
+        bounds "0.5000000000 0.4688889086 0.5000000000 0.5000000000"
+        windows
+        {
+            panel "properties"
+        }
+    }
+    toolwindow
+    {
+        bounds "0.0000000000 0.0311111119 0.5000000000 0.9377778172"
+        windows
+        {
+            panel "commentarynodebrowser"
+        }
+    }
+}

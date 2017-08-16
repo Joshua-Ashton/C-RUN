@@ -1,0 +1,19 @@
+// load the base configuration
+//exec default.cfg
+
+// Make sure dev is off.
+developer 0
+
+// Setup custom controller
+exec joystick.cfg
+
+// run a user script file if present
+exec autoexec.cfg
+
+//
+// stuff command line statements
+//
+stuffcmds
+
+// display the startup level
+//startupmenu
