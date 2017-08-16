@@ -1,5 +1,0 @@
-"VertexLitGeneric"
-{
-	// Original shader: VertexLitTexture
-	"$basetexture" "models/Weapons/V_smg2/TEXTURE4"
-}

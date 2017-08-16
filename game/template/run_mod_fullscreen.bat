@@ -1,1 +1,0 @@
-@"../swarm.exe" -fullscreen -w 1600 -h 900 -game template

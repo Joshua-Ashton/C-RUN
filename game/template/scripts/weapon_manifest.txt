@@ -1,7 +1,0 @@
-weapon_manifest
-{
-	"file"		"scripts/weapon_cubemap.txt"
-	"file"		"scripts/weapon_pistol.txt"
-	"file"		"scripts/weapon_smg.txt"
-	"file"		"scripts/weapon_shotgun.txt"
-}
