@@ -51,6 +51,12 @@ src/materialsystem/deferredshaders/Debug_dx9_deferred/game_shader_generic_deferr
 src/.vs/Game_Deferred-2013/v15/Solution.VC.db-wal
 src/.vs/Game_Deferred-2013/v15/Solution.VC.db-shm
 
-game/crun/cfg/videodefaults\.txt
+game/crun/cfg/config\.cfg
 
 game/crun/cfg/video\.txt
+
+game/crun/cfg/videodefaults\.txt
+
+game/platform/config/ingamedialogconfig\.vdf
+
+game/platform/config/serverbrowser\.vdf
