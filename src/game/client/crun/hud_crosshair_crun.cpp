@@ -102,7 +102,7 @@ bool CHudTemplateCrosshair::ShouldDraw()
 	if ( !crosshair.GetBool() && !IsX360() )
 		return false;
 
-	return true;
+	return pPlayer->GetActiveWeapon() != nullptr;
 }
 
 void CHudTemplateCrosshair::Paint()
