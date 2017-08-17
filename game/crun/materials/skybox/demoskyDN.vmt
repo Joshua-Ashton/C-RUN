@@ -1,4 +1,4 @@
-"unlitgeneric"
+"sky"
 {
 	"$basetexture" "skybox/demoskyDN"
 	"$hdrcompressedtexture" "skybox/demoskyBK"

@@ -1,6 +1,5 @@
 "LightmappedGeneric"
 {
 	"$basetexture" "PRD-tex/furniture/lamp_shade"
-	"$translucent" 1
 	"$surfaceprop" "carpet"
 }
