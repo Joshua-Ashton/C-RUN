@@ -24,6 +24,16 @@ $Project "Client (CRUN)"
 	{
 		$Folder	"CRUN"
 		{
+			$Folder "Weapons"
+			{
+				$File	"crun\weapons\c_basesdkcombatweapon.cpp"
+				$File	"crun\weapons\c_basesdkcombatweapon.h"
+				$File	"crun\weapons\c_weapon__stubs_sdk.cpp"
+				
+				$File	"$SRCDIR\game\shared\crun\weapons\basesdkcombatweapon_shared.cpp"
+				$File	"$SRCDIR\game\shared\crun\weapons\basesdkcombatweapon_shared.h"
+			}
+		
 			$File	"$SRCDIR\game\shared\crun\sdk_gamemovement.cpp"
 			$File	"$SRCDIR\game\shared\crun\sdk_gamerules_sp.h"
 			$File	"$SRCDIR\game\shared\crun\sdk_gamerules_sp.cpp"

@@ -2,9 +2,9 @@
 #define	WEAPONCUSTOM_H
 
 #include "smmod/weapon_parse_custom_weapon.h"
-#include "weapon_rpg.h"
 
 #ifdef HL2
+#include "weapon_rpg.h"
 #include "basehlcombatweapon.h"
 #define CUSTOM_WEAPON_BASE CHLSelectFireMachineGun
 #else
@@ -150,8 +150,11 @@ private:
 private:
 	bool				m_bInZoom;
 	bool				bFlip;
+
+#ifdef HL2
 	CHandle<CMissile>	m_hMissile;
 	CHandle<CMissile>	m_hMissile2;
+#endif
 
 	CNetworkVar( int, scopeNum );
 };

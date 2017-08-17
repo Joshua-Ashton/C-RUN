@@ -59,6 +59,9 @@ C_SDKPlayer::C_SDKPlayer()
 	ConVarRef scissor( "r_flashlightscissor" );
 	scissor.SetValue( "0" );
 
+	ConVarRef lightmapFilter( "mat_filterlightmaps" );
+	lightmapFilter.SetValue( "0" );
+
 #ifdef SWARM_DLL
 	// HACK! Close UI on spawn. Fixes bug with loading save games.
 	engine->ClientCmd("gameui_hide");
