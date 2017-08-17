@@ -1,0 +1,6 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "PRD-tex/tile/tileroof_xinxai_002b"
+	"$surfaceprop" "tile"
+	"$translucent" 1
+}

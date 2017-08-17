@@ -44,6 +44,9 @@
 
 			// The platform folder, has the stuff to make the engine run.
 			Game				platform
+			
+			// Crun base content. Includes SDK setup
+			Game				crun
 		}
 	}
 }
