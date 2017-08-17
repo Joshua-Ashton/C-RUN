@@ -1,14 +1,14 @@
 #ifndef	WEAPONCUSTOM_H
 #define	WEAPONCUSTOM_H
 
-#include "weapon_parse_custom_weapon.h"
+#include "smmod/weapon_parse_custom_weapon.h"
 #include "weapon_rpg.h"
 
 #ifdef HL2
 #include "basehlcombatweapon.h"
 #define CUSTOM_WEAPON_BASE CHLSelectFireMachineGun
 #else
-#include "basesdkcombatweapon.h"
+#include "weapons/basesdkcombatweapon.h"
 #define CUSTOM_WEAPON_BASE CSDKSelectFireMachineGun
 #endif
 

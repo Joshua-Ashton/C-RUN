@@ -12,7 +12,7 @@
 #include <vgui/ISurface.h>
 #include "c_baseplayer.h"
 #include "hud.h"
-#include "weapon_parse_custom_weapon.h"
+#include "smmod/weapon_parse_custom_weapon.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
