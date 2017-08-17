@@ -50,3 +50,7 @@ src/materialsystem/deferredshaders/Release_dx9_deferred/game_shader_generic_defe
 src/materialsystem/deferredshaders/Debug_dx9_deferred/game_shader_generic_deferred.lib
 src/.vs/Game_Deferred-2013/v15/Solution.VC.db-wal
 src/.vs/Game_Deferred-2013/v15/Solution.VC.db-shm
+
+game/crun/cfg/videodefaults\.txt
+
+game/crun/cfg/video\.txt

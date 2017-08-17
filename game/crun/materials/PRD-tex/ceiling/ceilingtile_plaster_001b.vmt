@@ -1,0 +1,5 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "PRD-tex/ceiling/ceilingtile_plaster_001b"
+	"$surfaceprop" "ceiling_tile"
+}

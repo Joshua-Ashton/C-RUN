@@ -1,0 +1,5 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "PRD-tex/furniture/tile_sink_001top"
+	"$surfaceprop" "tile"
+}
