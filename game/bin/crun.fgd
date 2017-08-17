@@ -1,0 +1,5 @@
+@include "base.fgd"
+
+@SolidClass base(Trigger, Angles) = trigger_forcewalk :
+	"A volumetric trigger that stops the player from running within its bounds. May cause issues if multiple triggers overlap: ewontfix."
+[]
