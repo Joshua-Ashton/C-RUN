@@ -60,7 +60,7 @@ C_SDKPlayer::C_SDKPlayer()
 	scissor.SetValue( "0" );
 
 	ConVarRef lightmapFilter( "mat_filterlightmaps" );
-	lightmapFilter.SetValue( "0" );
+	lightmapFilter.SetValue( "1" );
 
 #ifdef SWARM_DLL
 	// HACK! Close UI on spawn. Fixes bug with loading save games.
@@ -77,6 +77,9 @@ C_SDKPlayer::~C_SDKPlayer( void )
 void C_SDKPlayer::ClientThink( void )
 {
 	BaseClass::ClientThink();
+
+	ConVarRef lightmapFilter("mat_filterlightmaps");
+	lightmapFilter.SetValue("0");
 }
 
 void C_SDKPlayer::OnDataChanged( DataUpdateType_t type )
