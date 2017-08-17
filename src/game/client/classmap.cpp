@@ -110,7 +110,7 @@ C_BaseEntity *CClassMap::CreateEntity( const char *mapname )
 			continue;
 		}
 
-		return ( *lookup->factory )();
+		return ( *lookup->factory )( mapname );
 	}
 
 	return NULL;

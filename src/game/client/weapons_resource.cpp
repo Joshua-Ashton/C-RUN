@@ -12,6 +12,7 @@
 #include <vgui/ISurface.h>
 #include "c_baseplayer.h"
 #include "hud.h"
+#include "weapon_parse_custom_weapon.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -104,7 +105,7 @@ void WeaponsResource::LoadWeaponSprites( WEAPON_FILE_INFO_HANDLE hWeaponFileInfo
 	pWeaponInfo->iconSmall = NULL;
 
 	char sz[128];
-	Q_snprintf(sz, sizeof( sz ), "scripts/%s", pWeaponInfo->szClassName);
+	Q_snprintf(sz, sizeof( sz ), static_cast<CustomWeaponInfo*>( pWeaponInfo )->m_bIsCustom ? "scripts/weapon_custom/%s" : "scripts/%s", pWeaponInfo->szClassName);
 
 	CUtlDict< CHudTexture *, int > tempList;
 

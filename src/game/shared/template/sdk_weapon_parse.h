@@ -14,12 +14,13 @@
 #include "weapon_parse.h"
 #include "networkvar.h"
 
+#include "smmod/weapon_parse_custom_weapon.h"
 
 //--------------------------------------------------------------------------------------------------------
-class CSDKWeaponInfo : public FileWeaponInfo_t
+class CSDKWeaponInfo : public CustomWeaponInfo
 {
 public:
-	DECLARE_CLASS_GAMEROOT( CSDKWeaponInfo, FileWeaponInfo_t );
+	DECLARE_CLASS_GAMEROOT( CSDKWeaponInfo, CustomWeaponInfo );
 	
 	CSDKWeaponInfo();
 	

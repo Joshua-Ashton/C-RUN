@@ -269,6 +269,16 @@ typedef enum
 							ACT_VM_ATTACH_SILENCER,
 							ACT_VM_DETACH_SILENCER,
 
+							ACT_VM_PRIMARYATTACK_L,
+							ACT_VM_PRIMARYATTACK_R,
+							ACT_VM_PRIMARYATTACK_RL,
+							ACT_VM_PRIMARYATTACK_L_RECOIL1,
+							ACT_VM_PRIMARYATTACK_L_RECOIL2,
+							ACT_VM_PRIMARYATTACK_L_RECOIL3,
+							ACT_VM_PRIMARYATTACK_R_RECOIL1,
+							ACT_VM_PRIMARYATTACK_R_RECOIL2,
+							ACT_VM_PRIMARYATTACK_R_RECOIL3,
+
 							//===========================
 							// HL2 Specific Activities
 							//===========================

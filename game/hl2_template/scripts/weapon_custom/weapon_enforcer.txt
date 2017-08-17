@@ -1,0 +1,140 @@
+// Enforcer
+
+WeaponData
+{
+	// Weapon data is loaded by both the Game and Client DLLs.
+	"printname"			"ENFORCER CHAINGUN"
+	"viewmodel"			"models/weapons/v_enforcer.mdl"
+	"playermodel"			"models/weapons/w_enforcer.mdl"
+	"anim_prefix"			"shotgun"
+	"weapon_type"		"lmg" //Weapon Type.
+	"bucket"			"2"
+	"bucket_position"		"17"
+
+	"clip_size"			"60"
+	"clip2_size"			"-1"
+
+	"default_clip"			"60"
+	"default_clip2"			"-1"
+	
+	"primary_ammo"			"SMG1"
+
+	"weight"		"2"		//How much NPCs want to pick this up.
+	"rumble"		"1"		//Rumble setting for controllers.
+	"item_flags"		"0"		//Flags for the weapon.
+	
+	"BuiltRightHanded" 		"1" //Check to see if this is Left-Handed. Useful for CSS weapons.
+	"AllowFlipping" 		"1" //Check to see if we can use flipping.
+	"MagazineStyledReloads"		"1" //Check to see if we can use Magazine-Styled Reloads.
+	"UseMuzzleSmoke"		"1" //Check to see if we can use Muzzle Smoke.
+	"useironsights"		"0"	//Check if we can use Ironsights.
+	"LowerWeapon"			"1" //Check if we can lower the weapon while sprinting. Disable this if your viewmodel does not have a lowering animation.
+	
+
+	SoundData
+	{
+		"special1"		"Weapon_CombineGuard.Special1"
+		"empty"			"Weapon_IRifle.Empty"
+		"double_shot_npc"	"Weapon_AR2.NPC_Double"
+		"reload"		"Weapon_AR2.Reload"
+		"single_shot"		"Weapon_Enforcer.Single"
+		"single_shot_npc"	"Weapon_Enforcer.Single"
+		"reload_npc"		"Weapon_AR2.NPC_Reload"
+		"double_shot_npc"	"Weapon_AR2.NPC_Double"
+	}
+
+	// Weapon Sprite data is loaded by the Client DLL.
+	TextureData
+	{
+		"weapon"
+		{
+			"file"		"sprites/hud_weapons_enforcer"
+			"x"		"0"
+			"y"		"0"
+			"width"		"64"
+			"height"	"32"
+		}
+		"weapon_s"
+		{
+			"file"		"sprites/hud_weapons_enforcer"
+			"x"		"0"
+			"y"		"0"
+			"width"		"64"
+			"height"	"32"
+		}
+		"ammo"
+		{
+				"font"		"WeaponIcons"
+				"character"	"r"
+		}
+		"ammo2"
+		{
+				"font"		"WeaponIcons"
+				"character"	"t"
+		}
+		"crosshair"
+		{
+				"font"		"Crosshairs"
+				"character"	"Q"
+		}
+		"autoaim"
+		{
+				"file"		"sprites/crosshairs"
+				"x"			"0"
+				"y"			"48"
+				"width"		"24"
+				"height"	"24"
+		}
+	}
+	
+	//The "meat" of the weapon.
+	"WeaponSpec"
+	{
+
+		"WeaponOptions"
+		{
+			"CanReloadSingly" "0" //Check if we can reload 1 round at a time.
+			"DualWeapons"	"0"	//Check if we can use dual welding. This only works on primary fire unless you want "FireBothGuns" on secondary fire.
+		}
+
+		//Stuff that we will do on primary fire. Remove if you do not need primary fire (if you want night vision binoculars).
+		"PrimaryFire"
+		{	
+			"FireRate" "0.065" //How fast this fires
+			"ZoomFireRate"	"0.050" //How fast this fires when zoomed in.
+			"InfiniteAmmoPerk" "1" //Check to see if we can use this with the Infinite Ammo Perk. Disable "InfiniteAmmo" to stop conflicts.
+			"InfiniteAmmo" "0" //Check to see if we can use this with Infinite Ammo by default. Disable "InfiniteAmmoPerk" to stop conflicts.
+			"MinRange"	"5"	//The minimum amount of range that this weapon would fire at.
+			"MaxRange"	"20" //The maximum amount of range that this weapon would fire at.
+			"CanFireUnderwater"	"0"	//Can we use this underwater?
+
+			"Bullet"
+			{
+				"Damage"	"9" //Amount of damage we will do.
+				"ShotCount"	"1" //How many shots we will fire at once.
+				"Spread"
+				{
+					//Spread (in degrees)
+					"x"	"0.08"
+					"y"	"0.08"
+					"z"	"0.08"
+				}
+				"ZoomSpread"
+				{
+					//Spread when zoomed in (in degrees)
+					"x"	"0.08"
+					"y"	"0.08"
+					"z"	"0.08"
+				}
+			}
+
+			//Recoil Settings.
+			"Recoil"
+			{
+				"EasyDampen"	"0.5"	//How much we will dampen the recoil on the Easy difficulty.
+				"Degrees"		"1"		//How many degrees.
+				"Seconds"		"2"		//How long this will be.
+			}
+		}
+	}
+}

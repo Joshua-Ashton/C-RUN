@@ -127,7 +127,7 @@ typedef void (C_BaseEntity::*BASEPTR)(void);
 typedef void (C_BaseEntity::*ENTITYFUNCPTR)(C_BaseEntity *pOther );
 
 // For entity creation on the client
-typedef C_BaseEntity* (*DISPATCHFUNCTION)( void );
+typedef C_BaseEntity* (*DISPATCHFUNCTION)( const char* );
 
 #include "touchlink.h"
 #include "groundlink.h"

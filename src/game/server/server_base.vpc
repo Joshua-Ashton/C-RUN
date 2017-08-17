@@ -50,6 +50,12 @@ $Project
 {
 	$Folder	"Source Files"
 	{
+		$Folder Smmod
+		{
+			$File	"$SRCDIR\game\shared\smmod\weapon_parse_custom_weapon.cpp"
+			$File	"smmod\weapon_custom.cpp"
+		}
+
 		$File	"ai_addon.cpp"
 		$File	"ai_addon.h"
 		$File	"ai_agent.cpp"

@@ -11,7 +11,7 @@
 #include "hl2_shareddefs.h"
 
 #ifdef CLIENT_DLL
-
+	#include "filesystem.h"
 #else
 	#include "player.h"
 	#include "game.h"
@@ -1903,6 +1903,32 @@ CAmmoDef *GetAmmoDef()
 		def.AddAmmoType("CombineHeavyCannon",	DMG_BULLET,				TRACER_LINE,			40,	40, NULL, 10 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED ); // hit like a 10 kg weight at 750 ft/s
 		def.AddAmmoType("ammo_proto1",			DMG_BULLET,				TRACER_LINE,			0, 0, 10, 0, 0 );
 #endif // HL2_EPISODIC
+
+		{
+			KeyValuesAD pCusAmmo( "CustomAmmo" );
+			if ( pCusAmmo->LoadFromFile( filesystem, "scripts/customammo.txt", "MOD" ) )
+			{
+				FOR_EACH_TRUE_SUBKEY( pCusAmmo, ammo )
+				{
+					const char* name = ammo->GetName();
+					int dmgBits = ammo->GetInt( "dmgType" );
+					int tracer = ammo->GetInt( "tracer" );
+					int plr = ammo->GetInt( "plrDmg" );
+					int npc = ammo->GetInt( "npcDmg" );
+					int max = ammo->GetInt( "maxAmmo" );
+					float impulse;
+					KeyValues *imp = ammo->FindKey( "BulletImpulse" );
+					if ( imp )
+						impulse = BULLET_IMPULSE( imp->GetFloat( "grains" ), imp->GetFloat( "ftps" ) );
+					else
+						impulse = ammo->GetFloat( "impulse" );
+					int flags = ammo->GetInt( "flags" );
+					int minSplash = ammo->GetInt( "minSplash", 4 );
+					int maxSplash = ammo->GetInt( "maxSplash", 8 );
+					def.AddAmmoType( name, dmgBits, tracer, plr, npc, max, impulse, flags, minSplash, maxSplash );
+				}
+			}
+		}
 	}
 
 	return &def;

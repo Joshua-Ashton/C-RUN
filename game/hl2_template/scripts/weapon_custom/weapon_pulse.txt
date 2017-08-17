@@ -1,0 +1,163 @@
+// Handheld Pulse Turret
+
+WeaponData
+{
+	// Weapon data is loaded by both the Game and Client DLLs.
+	"printname"	"PULSE-MACHINE GUN"
+	"viewmodel"			"models/weapons/v_pulsemg.mdl"
+	"playermodel"			"models/weapons/w_pulsemg.mdl" 
+	"anim_prefix"			"ar2"
+	"weapon_type"		"ar2" //Weapon Type.
+	"bucket"			"2"
+	"bucket_position"		"13"
+
+	"clip_size"			"60"
+	"clip2_size"			"-1"
+
+	"default_clip"			"60"
+	"default_clip2"			"-1"
+	
+
+	"primary_ammo"			"AR2"
+	"secondary_ammo"		"None"
+
+	"weight"			"3"
+	"item_flags"			"0"
+	"rumble"		"1"		//Rumble setting for controllers.
+	
+	"BuiltRightHanded" 		"1" //Check to see if this is Left-Handed. Useful for CSS weapons.
+	"AllowFlipping" 		"1" //Check to see if we can use flipping.
+	"MagazineStyledReloads"		"1" //Check to see if we can use Magazine-Styled Reloads.
+	"UseMuzzleSmoke"		"1" //Check to see if we can use Muzzle Smoke.
+	"useironsights"		"1"	//Check if we can use Ironsights.
+	"LowerWeapon"			"1" //Check if we can lower the weapon while sprinting. Disable this if your viewmodel does not have a lowering animation.
+	
+	//Ironsight settings
+	IronSight
+	{
+		"right"		"-5.5"
+		"up"		"1.7"
+		"forward"	"-5"
+		"fov"		"-20"
+		"yaw"		"-1.050000"
+	}
+
+	// Sounds for the weapon. There is a max of 16 sounds per category (i.e. max 16 "single_shot" sounds)
+	SoundData
+	{
+		"reload"		"Weapon_AR2.Reload"
+		"reload_npc"		"Weapon_SMG1.NPC_Reload"
+		"empty"			"Weapon_SMG1.Empty"
+		"single_shot"		"Weapon_functank.Single"
+		"single_shot_npc"	"Weapon_functank.Single"
+		"special1"		"Weapon_SMG1.Special1"
+		"special2"		"Weapon_SMG1.Special2"
+		"special3"		"Weapon_Alyxgun.Single"
+		"double_shot"		"Weapon_SMG1.Double"
+		"burst"			"Weapon_SMG1.Burst"
+	}
+
+	// Weapon Sprite data is loaded by the Client DLL.
+	TextureData
+	{
+		"weapon"
+		{
+			"file"		"sprites/hud_weapons_pulsemg"
+			"x"		"0"
+			"y"		"0"
+			"width"		"64"
+			"height"	"32"
+		}
+		"weapon_s"
+		{
+			"file"		"sprites/hud_weapons_pulsemg"
+			"x"		"64"
+			"y"		"0"
+			"width"		"64"
+			"height"	"32"
+		}
+		"ammo"
+		{
+				"font"		"WeaponIcons"
+				"character"	"u"
+		}
+		"ammo2"
+		{
+				"font"		"WeaponIcons"
+				"character"	"t"
+		}
+		"crosshair"
+		{
+			"file"		"sprites/hud_weapons"
+			"x"			"0"
+			"y"			"0"
+			"width"		"32"
+			"height"	"32"
+		}
+		"autoaim"
+		{
+			"file"		"sprites/hud_weapons"
+			"x"			"0"
+			"y"			"0"
+			"width"		"32"
+			"height"	"32"
+		}
+	}
+	
+	//The "meat" of the weapon.
+	"WeaponSpec"
+	{
+		"WeaponOptions"
+		{
+			"CanReloadSingly" "0" //Check if we can reload 1 round at a time.
+			"DualWeapons"	"0"	//Check if we can use dual welding. This only works on primary fire unless you want "FireBothGuns" on secondary fire.
+		}
+	
+		//Stuff that we will do on primary fire. Remove if you do not need primary fire (if you want night vision binoculars).
+		"PrimaryFire"
+		{	
+			"FireRate" "0.075" //How fast this fires
+			"IronsightFireRate"	"0.060" //How fast this fires when ironsighted.
+			"ZoomFireRate"	"0.060" //How fast this fires when zoomed in.
+			"InfiniteAmmoPerk" "1" //Check to see if we can use this with the Infinite Ammo Perk. Disable "InfiniteAmmo" to stop conflicts.
+			"InfiniteAmmo" "0" //Check to see if we can use this with Infinite Ammo by default. Disable "InfiniteAmmoPerk" to stop conflicts.
+			"MinRange"	"0"	//The minimum amount of range that this weapon would fire at.
+			"MaxRange"	"4096" //The maximum amount of range that this weapon would fire at.
+			"CanFireUnderwater"	"0"	//Can we use this underwater?
+                        "FireBothGuns"	"0"	//Can we fire both guns? Only works if "Dual Weapons" is on. 
+			//Bullet Settings. Remove if you do not want bullets.
+			"Bullet"
+			{
+				"Damage"	"8" //Amount of damage we will do.
+				"ShotCount"	"1" //How many shots we will fire at once.
+				"Spread"
+				{
+					//Spread (in degrees)
+					"x"	"0.05"
+					"y"	"0.05"
+					"z"	"0.05"
+				}
+				"IronsightSpread"
+				{
+					//Spread when ironsighted (in degrees)
+					"x"	"0.05"
+					"y"	"0.05"
+					"z"	"0.05"
+				}
+				"ZoomSpread"
+				{
+					//Spread when zoomed in (in degrees)
+					"x"	"0.05"
+					"y"	"0.05"
+					"z"	"0.05"
+				}
+			}
+			//Recoil Settings.
+			"Recoil"
+			{
+				"EasyDampen"	"0.5"	//How much we will dampen the recoil on the Easy difficulty.
+				"Degrees"		"1"		//How many degrees.
+				"Seconds"		"2"		//How long this will be.
+			}
+		}
+}

@@ -51,7 +51,13 @@ $Configuration
 $Project
 {
 	$Folder	"Source Files"
-	{		
+	{
+		$Folder Smmod
+		{
+			$File	"$SRCDIR\game\shared\smmod\weapon_parse_custom_weapon.cpp"
+			$File	"smmod\c_weapon_custom.cpp"
+		}
+
 		$Folder	"GameUI"
 		{
 			$File	"gameui\backgroundmenubutton.cpp" \

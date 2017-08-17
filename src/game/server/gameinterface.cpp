@@ -248,6 +248,8 @@ INetworkStringTable *g_pStringTableMaterials = NULL;
 INetworkStringTable *g_pStringTableInfoPanel = NULL;
 INetworkStringTable *g_pStringTableClientSideChoreoScenes = NULL;
 INetworkStringTable *g_pStringTableExtraParticleFiles = NULL;
+INetworkStringTable *g_pStringTableCustomWeapons = NULL;
+INetworkStringTable *g_pStringTableCustomWeaponsFactory = NULL;
 
 CStringTableSaveRestoreOps g_VguiScreenStringOps;
 
@@ -1495,6 +1497,9 @@ void CServerGameDLL::CreateNetworkStringTables( void )
 	g_pStringTableMaterials = networkstringtable->CreateStringTable( "Materials", MAX_MATERIAL_STRINGS, 0, 0, NSF_DICTIONARY_ENABLED );
 	g_pStringTableInfoPanel = networkstringtable->CreateStringTable( "InfoPanel", MAX_INFOPANEL_STRINGS );
 	g_pStringTableClientSideChoreoScenes = networkstringtable->CreateStringTable( "Scenes", MAX_CHOREO_SCENES_STRINGS, 0, 0, NSF_DICTIONARY_ENABLED );
+
+	g_pStringTableCustomWeapons = networkstringtable->CreateStringTable( "CustomWeaponsAliases", 128 );
+	g_pStringTableCustomWeaponsFactory = networkstringtable->CreateStringTable( "CustomWeaponsFactory", 1024 );
 
 #ifdef DEFERRED
 	// @Deferred - Biohazard

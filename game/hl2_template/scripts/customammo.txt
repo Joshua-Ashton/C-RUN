@@ -1,0 +1,20 @@
+"CustomAmmo"
+{
+	"Sniper"
+	{
+		"dmgType"	"1073741826"
+		"tracer"		"1"
+		"plrDmg"		"100"
+		"npcDmg"		"50"
+		"maxAmmo"	"30"
+		"BulletImpulse"
+		{
+			"grains"		"650"
+			"ftps"		"6000"
+		}
+		//"impulse"
+		//"flags"
+		//"minSplash"
+		//"maxSplash"
+	}
+}

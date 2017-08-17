@@ -99,9 +99,6 @@ void C_World::OnDataChanged( DataUpdateType_t updateType )
 			ScreenFade_t sf;
 			memset( &sf, 0, sizeof( sf ) );
 			sf.a = 255;
-			sf.r = 0;
-			sf.g = 0;
-			sf.b = 0;
 			sf.duration = (float)(1<<SCREENFADE_FRACBITS) * 5.0f;
 			sf.holdTime = (float)(1<<SCREENFADE_FRACBITS) * 1.0f;
 			sf.fadeFlags = FFADE_IN | FFADE_PURGE;
@@ -150,6 +147,7 @@ PRECACHE_REGISTER_END()
 void W_Precache(void)
 {
 	PrecacheFileWeaponInfoDatabase( filesystem, g_pGameRules->GetEncryptionKey() );
+	PrecacheCustomFileWeaponInfoDatabase( filesystem );
 }
 
 void C_World::Precache( void )

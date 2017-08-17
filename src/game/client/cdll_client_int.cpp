@@ -242,6 +242,8 @@ INetworkStringTable *g_StringTableVguiScreen = NULL;
 INetworkStringTable *g_pStringTableMaterials = NULL;
 INetworkStringTable *g_pStringTableInfoPanel = NULL;
 INetworkStringTable *g_pStringTableClientSideChoreoScenes = NULL;
+INetworkStringTable *g_pStringTableCustomWeapons = NULL;
+INetworkStringTable *g_pStringTableCustomWeaponsFactory = NULL;
 
 static CGlobalVarsBase dummyvars( true );
 // So stuff that might reference gpGlobals during DLL initialization won't have a NULL pointer.
@@ -2126,6 +2128,9 @@ void OnSceneStringTableChanged( void *object, INetworkStringTable *stringTable, 
 {
 }
 
+void OnCustomWeaponsTableChanged( void *object, INetworkStringTable *stringTable, int stringNumber, const char *newString, void const *newData );
+void OnCustomWeaponsFactoryTableChanged( void *object, INetworkStringTable *stringTable, int stringNumber, const char *newString, void const *newData );
+
 //-----------------------------------------------------------------------------
 // Purpose: Hook up any callbacks here, the table definition has been parsed but 
 //  no data has been added yet
@@ -2179,6 +2184,18 @@ void CHLClient::InstallStringTableCallback( const char *tableName )
 		networkstringtable->SetAllowClientSideAddString( g_pStringTableExtraParticleFiles, true );
 		// When the particle system list changes, we need to know immediately
 		g_pStringTableExtraParticleFiles->SetStringChangedCallback( NULL, OnPrecacheParticleFile );
+	}
+	else if ( !Q_strcasecmp( tableName, "CustomWeaponsAliases" ) )
+	{
+		g_pStringTableCustomWeapons = networkstringtable->FindTable( tableName );
+		networkstringtable->SetAllowClientSideAddString( g_pStringTableCustomWeapons, false );
+		g_pStringTableCustomWeapons->SetStringChangedCallback( NULL, OnCustomWeaponsTableChanged );
+	}
+	else if ( !Q_strcasecmp( tableName, "CustomWeaponsFactory" ) )
+	{
+		g_pStringTableCustomWeaponsFactory = networkstringtable->FindTable( tableName );
+		networkstringtable->SetAllowClientSideAddString( g_pStringTableCustomWeaponsFactory, false );
+		g_pStringTableCustomWeaponsFactory->SetStringChangedCallback( NULL, OnCustomWeaponsFactoryTableChanged );
 	}
 #ifdef DEFERRED
 	// @Deferred - Biohazard

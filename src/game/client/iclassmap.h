@@ -12,7 +12,7 @@
 #endif
 
 class C_BaseEntity;
-typedef C_BaseEntity* (*DISPATCHFUNCTION)( void );
+typedef C_BaseEntity* (*DISPATCHFUNCTION)( const char* );
 
 abstract_class IClassMap
 {

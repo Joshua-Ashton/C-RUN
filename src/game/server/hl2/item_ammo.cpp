@@ -589,6 +589,54 @@ public:
 
 LINK_ENTITY_TO_CLASS( item_ammo_ar2_altfire, CItem_AR2AltFireRound );
 
+
+//------------------------------------------------------------------------
+//	Editable ammo
+//------------------------------------------------------------------------
+class CItem_EditableAmmo : public CItem
+{
+public:
+	DECLARE_DATADESC();
+	DECLARE_CLASS( CItem_EditableAmmo, CItem );
+
+	void Precache( void )
+	{
+		PrecacheModel( modelName.ToCStr() );
+	}
+
+	void Spawn( void )
+	{
+		Precache();
+		SetModel( modelName.ToCStr() );
+		BaseClass::Spawn();
+	}
+
+	bool MyTouch( CBasePlayer *pPlayer )
+	{
+		if ( pPlayer->GiveAmmo( ammoCount, ammoName.ToCStr() ) )
+		{
+			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
+			{
+				UTIL_Remove( this );
+			}
+			return true;
+		}
+		return false;
+	}
+private:
+	int ammoCount;
+	string_t ammoName;
+	string_t modelName;
+};
+
+LINK_ENTITY_TO_CLASS( item_ammo_custom, CItem_EditableAmmo );
+
+BEGIN_DATADESC( CItem_EditableAmmo )
+	DEFINE_KEYFIELD( modelName, FIELD_MODELNAME, "model" ),
+	DEFINE_KEYFIELD( ammoName, FIELD_STRING, "ammoName" ),
+	DEFINE_KEYFIELD( ammoCount, FIELD_INTEGER, "ammoCount" ),
+END_DATADESC()
+
 // ==================================================================
 // Ammo crate which will supply infinite ammo of the specified type
 // ==================================================================

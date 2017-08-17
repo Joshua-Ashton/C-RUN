@@ -10,6 +10,14 @@
 #include "filesystem.h"
 #include "utldict.h"
 #include "ammodef.h"
+#include <string>
+
+#ifndef CLIENT_DLL
+	#include "smmod/weapon_custom.h"
+#else
+	#include "smmod/c_weapon_custom.h"
+	#include "networkstringtabledefs.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -122,7 +130,7 @@ static FileWeaponInfo_t gNullWeaponInfo;
 //-----------------------------------------------------------------------------
 FileWeaponInfo_t *GetFileWeaponInfoFromHandle( WEAPON_FILE_INFO_HANDLE handle )
 {
-	if ( handle >= m_WeaponInfoDatabase.Count() )
+	if ( handle < 0 || handle >= m_WeaponInfoDatabase.Count() )
 	{
 		return &gNullWeaponInfo;
 	}
@@ -159,6 +167,90 @@ void ResetFileWeaponInfoDatabase( void )
 #endif
 }
 #endif
+
+#ifdef CLIENT_DLL
+static C_BaseEntity *C_ScriptedWeaponFactory( const char* className )
+{
+	return new C_WeaponCustom( className );
+}
+
+CUtlVector<std::string> customWepDatabase;
+void OnCustomWeaponsTableChanged( void*, INetworkStringTable*, int, const char *newString, void const * )
+{
+	if ( customWepDatabase.Find( newString ) == customWepDatabase.InvalidIndex() )
+		customWepDatabase.AddToTail( newString );
+
+	if ( !GetClassMap().Lookup( newString ) )
+	{
+		char className[256];
+		V_snprintf( className, 256, "C_WeaponCustom%s", newString + 6 );
+		GetClassMap().Add( newString, className, sizeof( C_WeaponCustom ), &C_ScriptedWeaponFactory );
+	}
+}
+#else
+extern INetworkStringTable *g_pStringTableCustomWeapons;
+static CUtlDict< CEntityFactory<CWeaponCustom>*, unsigned short > m_WeaponFactoryDatabase;
+
+static class CCustomWeaponCleaner : public CAutoGameSystem
+{
+public:
+	void Shutdown() override
+	{
+		m_WeaponFactoryDatabase.PurgeAndDeleteElements();
+	}
+} cleaner;
+#endif
+
+void PrecacheCustomFileWeaponInfoDatabase( IFileSystem *filesystem )
+{
+	FileFindHandle_t matHandle;
+	const char *pFileName = filesystem->FindFirstEx( "scripts/weapon_custom/weapon_*.txt", "MOD", &matHandle );
+
+	while ( pFileName )
+	{
+		char szFileName[_MAX_PATH];
+		Q_snprintf( szFileName, sizeof( szFileName ), "scripts/weapon_custom/%s", pFileName );
+
+		if ( !g_pFullFileSystem->FileExists( szFileName, "MOD" ) )
+			goto nextFile;
+
+		char fileName[128];
+		V_FileBase( pFileName, fileName, 128 );
+
+		WEAPON_FILE_INFO_HANDLE tmp;
+#ifdef CLIENT_DLL
+		if ( !GetClassMap().Lookup( fileName ) )
+		{
+			char className[256];
+			V_snprintf( className, 256, "C_WeaponCustom%s", fileName + 6 );
+			GetClassMap().Add( fileName, className, sizeof( C_WeaponCustom ), &C_ScriptedWeaponFactory );
+		}
+		if ( ReadWeaponDataFromFileForSlot( filesystem, fileName, &tmp, NULL, true ) )
+		{
+			gWR.LoadWeaponSprites( tmp );
+		}
+#else
+		if ( !EntityFactoryDictionary()->FindFactory( fileName ) )
+		{
+			unsigned short lookup = m_WeaponFactoryDatabase.Find( fileName );
+			if ( lookup == m_WeaponFactoryDatabase.InvalidIndex() )
+			{
+				CEntityFactory<CWeaponCustom>* ins = new CEntityFactory<CWeaponCustom>( fileName );
+				lookup = m_WeaponFactoryDatabase.Insert( fileName, ins );
+				Assert( lookup != m_WeaponFactoryDatabase.InvalidIndex() );
+			}
+		}
+
+		ReadWeaponDataFromFileForSlot( filesystem, fileName, &tmp, NULL, true );
+		g_pStringTableCustomWeapons->AddString( true, fileName, V_strlen( fileName ) );
+#endif
+
+	nextFile:
+		pFileName = filesystem->FindNext( matHandle );
+	}
+
+	filesystem->FindClose( matHandle );
+}
 
 void PrecacheFileWeaponInfoDatabase( IFileSystem *filesystem, const unsigned char *pICEKey )
 {
@@ -264,7 +356,7 @@ KeyValues* ReadEncryptedKVFile( IFileSystem *filesystem, const char *szFilenameW
 //			false - if data load fails
 //-----------------------------------------------------------------------------
 
-bool ReadWeaponDataFromFileForSlot( IFileSystem* filesystem, const char *szWeaponName, WEAPON_FILE_INFO_HANDLE *phandle, const unsigned char *pICEKey )
+bool ReadWeaponDataFromFileForSlot( IFileSystem* filesystem, const char *szWeaponName, WEAPON_FILE_INFO_HANDLE *phandle, const unsigned char *pICEKey, bool bIsCustom )
 {
 	if ( !phandle )
 	{
@@ -279,8 +371,13 @@ bool ReadWeaponDataFromFileForSlot( IFileSystem* filesystem, const char *szWeapo
 	if ( pFileInfo->bParsedScript )
 		return true;
 
+#ifdef CLIENT_DLL
+	if ( customWepDatabase.Find( szWeaponName ) != customWepDatabase.InvalidIndex() )
+		bIsCustom = true;
+#endif
+
 	char sz[128];
-	Q_snprintf( sz, sizeof( sz ), "scripts/%s", szWeaponName );
+	Q_snprintf( sz, sizeof( sz ), bIsCustom ? "scripts/weapon_custom/%s" : "scripts/%s", szWeaponName );
 	KeyValues *pKV = ReadEncryptedKVFile( filesystem, sz, pICEKey );
 	if ( !pKV )
 		return false;
