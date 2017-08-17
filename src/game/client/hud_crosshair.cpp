@@ -62,6 +62,10 @@ void CHudCrosshair::ApplySchemeSettings( IScheme *scheme )
 //-----------------------------------------------------------------------------
 bool CHudCrosshair::ShouldDraw( void )
 {
+#ifdef CRUN_DLL
+	return false;
+#endif
+
 	bool bNeedsDraw;
 
 	if ( m_bHideCrosshair )
