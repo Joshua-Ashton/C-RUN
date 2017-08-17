@@ -11,6 +11,7 @@
 #include "engine/ivdebugoverlay.h"
 #include "c_ai_basenpc.h"
 #include "in_buttons.h"
+#include "gameui_util.h"
 #include "collisionutils.h"
 
 #define AVOID_SPEED 2000.0f
@@ -59,9 +60,6 @@ C_SDKPlayer::C_SDKPlayer()
 	ConVarRef scissor( "r_flashlightscissor" );
 	scissor.SetValue( "0" );
 
-	ConVarRef lightmapFilter( "mat_filterlightmaps" );
-	lightmapFilter.SetValue( "1" );
-
 #ifdef SWARM_DLL
 	// HACK! Close UI on spawn. Fixes bug with loading save games.
 	engine->ClientCmd("gameui_hide");
@@ -74,18 +72,17 @@ C_SDKPlayer::~C_SDKPlayer( void )
 
 }
 
-void C_SDKPlayer::ClientThink( void )
+void C_SDKPlayer::ClientThink(void)
 {
 	BaseClass::ClientThink();
-
-	ConVarRef lightmapFilter("mat_filterlightmaps");
-	lightmapFilter.SetValue("0");
 }
 
 void C_SDKPlayer::OnDataChanged( DataUpdateType_t type )
 {
 	if ( type == DATA_UPDATE_CREATED )
 	{
+		CGameUIConVarRef lightmapFilter("mat_filterlightmaps");
+		lightmapFilter.SetValue("1");
 		SetNextClientThink( CLIENT_THINK_ALWAYS );
 	}
 
@@ -200,6 +197,9 @@ bool C_SDKPlayer::TestMove( const Vector &pos, float fVertDist, float radius, co
 //-----------------------------------------------------------------------------
 void C_SDKPlayer::PerformClientSideObstacleAvoidance( float flFrameTime, CUserCmd *pCmd )
 {
+	CGameUIConVarRef lightmapFilter("mat_filterlightmaps");
+	lightmapFilter.SetValue("0");
+
 	// Don't avoid if noclipping or in movetype none
 	switch ( GetMoveType() )
 	{
