@@ -1,1 +1,1 @@
-@"../swarm.exe" -fullscreen -w 1600 -h 900 -game crun
+@"../swarm.exe" -fullscreen -w 1920 -h 1080 -game crun
