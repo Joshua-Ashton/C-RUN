@@ -1,0 +1,7 @@
+"unlitgeneric"
+{
+	"$basetexture" "skybox/fogsky_greenUP"
+	"$hdrcompressedtexture" "skybox/fogsky_greenUP"
+	"$nofog" 1
+	"$ignorez" 1
+}

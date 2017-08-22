@@ -1,0 +1,14 @@
+$bsp_exe
+-snapaxial -bumpall -leaktest -game $gamedir $path\$file
+
+$vis_exe
+-game $gamedir $path\$file
+
+$light_exe
+-final -bounce 200 -luxeldensity 0.5 -softsun 3 -textureshadows -StaticPropPolys -StaticPropLighting -game $gamedir $path\$file
+
+Copy File
+$path\$file.bsp $bspdir\$file.bsp
+
+$game_exe
+-hijack -dev -console -allowdebug -game $gamedir +map $file +sv_lan 1

@@ -1,0 +1,6 @@
+"unlitgeneric"
+{
+	"$basetexture" "PRD-tex/skybox/demoskyUP"
+	"$nofog" 1
+	"$ignorez" 1
+}
