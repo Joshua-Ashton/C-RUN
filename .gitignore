@@ -64,3 +64,5 @@ game/platform/config/serverbrowser\.vdf
 game/crun/run_mod_fullscreen\.bat
 
 game/bin/CmdSeq\.wc
+
+*.vdf
