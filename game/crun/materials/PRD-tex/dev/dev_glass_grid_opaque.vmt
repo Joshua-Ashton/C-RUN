@@ -1,0 +1,5 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "PRD-tex/dev/dev_glass_grid_opaque"
+	"$surfaceprop" "glass"
+}
