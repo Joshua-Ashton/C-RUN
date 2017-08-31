@@ -42,6 +42,12 @@ $Project "Server (Template)"
 			$File	"template\sdk_playermove.cpp"
 			$File	"template\test_entity.cpp"
 			$File	"template\weapon_cubemap.cpp"
+
+			$Folder	Weapons
+			{
+				$File	"template\weapons\basesdkcombatweapon.cpp"
+				$File	"$SRCDIR\game\shared\template\weapons\basesdkcombatweapon_shared.cpp"
+			}
 		}
 	}
 }

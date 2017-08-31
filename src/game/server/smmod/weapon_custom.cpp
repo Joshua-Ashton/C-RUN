@@ -5,33 +5,27 @@
 //=============================================================================//
 
 #include "cbase.h"
-#ifdef HL2
-#include "basehlcombatweapon.h"
-#else
-#include "weapons/basesdkcombatweapon.h"
-#endif
+#include "weapon_custom.h"
 #include "NPCevent.h"
 #include "basecombatcharacter.h"
 #include "AI_BaseNPC.h"
 #include "player.h"
-#include "game.h"
 #include "in_buttons.h"
-#include "grenade_ar2.h"
-#ifdef HL2
-#include "weapon_rpg.h"
-#endif
 #include "triggers.h"
 #include "AI_Memory.h"
 #include "soundent.h"
-#include "rumble_shared.h"
 #include "gamestats.h"
 #include "Filesystem.h"
-#include "weapon_custom.h"
-#ifdef HL2
-#include "prop_combine_ball.h"
-#endif
 #include "te_effect_dispatch.h"
 #include "particle_parse.h"
+
+#ifdef HL2_DLL
+#include "game.h"
+#include "weapon_rpg.h"
+#include "grenade_ar2.h"
+#include "prop_combine_ball.h"
+#include "rumble_shared.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -59,7 +53,7 @@ IMPLEMENT_SERVERCLASS_ST( CWeaponCustom, DT_WeaponCustom )
 END_SEND_TABLE()
 
 BEGIN_DATADESC( CWeaponCustom )
-#ifdef HL2
+#ifdef HL2_DLL
 	DEFINE_FIELD( m_hMissile, FIELD_EHANDLE ),
 	DEFINE_FIELD( m_hMissile2, FIELD_EHANDLE ),
 #endif
@@ -69,12 +63,6 @@ END_DATADESC()
 //=========================================================
 CWeaponCustom::CWeaponCustom()
 {
-}
-
-void CWeaponCustom::PostConstructor( const char* classname )
-{
-	BaseClass::PostConstructor( classname );
-
 }
 
 
@@ -697,19 +685,15 @@ void CWeaponCustom::ShootBulletsRight( bool isPrimary, bool usePrimaryAmmo )
 
 #ifdef HL2_DLL
 extern int g_interactionPlayerLaunchedRPG;
-#endif
 
 void CWeaponCustom::ShootProjectile( bool isPrimary, bool usePrimaryAmmo )
 {
-#ifdef HL2
 	// Can't have an active missile out
 	if ( m_hMissile != NULL )
 		return;
 
 	if ( m_hMissile2 != NULL )
 		return;
-#endif
-
 	// Can't be reloading
 	if ( GetActivity() == ACT_VM_RELOAD )
 		return;
@@ -742,9 +726,7 @@ void CWeaponCustom::ShootProjectile( bool isPrimary, bool usePrimaryAmmo )
 
 	QAngle vecAngles;
 	VectorAngles( vForward, vecAngles );
-#ifdef HL2
 	m_hMissile = CMissile::Create( muzzlePoint, vecAngles, GetOwner()->edict() );
-#endif
 
 	//	m_hMissile->m_hOwner = this;
 
@@ -752,10 +734,8 @@ void CWeaponCustom::ShootProjectile( bool isPrimary, bool usePrimaryAmmo )
 	trace_t	tr;
 	Vector vecEye = pOwner->EyePosition();
 	UTIL_TraceLine( vecEye, vecEye + vForward * 128, MASK_SHOT, this, COLLISION_GROUP_NONE, &tr );
-#ifdef HL2
 	if ( tr.fraction == 1.0 )
 		m_hMissile->SetGracePeriod( 0.3 );
-#endif
 
 	// Register a muzzleflash for the AI
 	pOwner->SetMuzzleFlashTime( gpGlobals->curtime + 0.5 );
@@ -803,7 +783,6 @@ void CWeaponCustom::ShootProjectile( bool isPrimary, bool usePrimaryAmmo )
 		}
 	}
 
-#ifdef HL2
 	if ( hl2_episodic.GetBool() )
 	{
 		CAI_BaseNPC **ppAIs = g_AI_Manager.AccessAIs();
@@ -819,19 +798,16 @@ void CWeaponCustom::ShootProjectile( bool isPrimary, bool usePrimaryAmmo )
 			}
 		}
 	}
-#endif
 }
 
 void CWeaponCustom::ShootProjectileRight( bool isPrimary, bool usePrimaryAmmo )
 {
-#ifdef HL2
 	// Can't have an active missile out
 	if ( m_hMissile != NULL )
 		return;
 
 	if ( m_hMissile2 != NULL )
 		return;
-#endif
 
 	// Can't be reloading
 	if ( GetActivity() == ACT_VM_RELOAD )
@@ -865,9 +841,7 @@ void CWeaponCustom::ShootProjectileRight( bool isPrimary, bool usePrimaryAmmo )
 
 	QAngle vecAngles;
 	VectorAngles( vForward, vecAngles );
-#ifdef HL2
 	m_hMissile = CMissile::Create( muzzlePoint, vecAngles, GetOwner()->edict() );
-#endif
 
 	//	m_hMissile->m_hOwner = this;
 
@@ -875,10 +849,8 @@ void CWeaponCustom::ShootProjectileRight( bool isPrimary, bool usePrimaryAmmo )
 	trace_t	tr;
 	Vector vecEye = pOwner->EyePosition();
 	UTIL_TraceLine( vecEye, vecEye + vForward * 128, MASK_SHOT, this, COLLISION_GROUP_NONE, &tr );
-#ifdef HL2
 	if ( tr.fraction == 1.0 )
 		m_hMissile->SetGracePeriod( 0.3 );
-#endif
 
 	// Register a muzzleflash for the AI
 	pOwner->SetMuzzleFlashTime( gpGlobals->curtime + 0.5 );
@@ -926,7 +898,7 @@ void CWeaponCustom::ShootProjectileRight( bool isPrimary, bool usePrimaryAmmo )
 		}
 	}
 
-	/*if ( hl2_episodic.GetBool() )
+	if ( hl2_episodic.GetBool() )
 	{
 		CAI_BaseNPC **ppAIs = g_AI_Manager.AccessAIs();
 		int nAIs = g_AI_Manager.NumAIs();
@@ -940,19 +912,17 @@ void CWeaponCustom::ShootProjectileRight( bool isPrimary, bool usePrimaryAmmo )
 				ppAIs[i]->DispatchInteraction( g_interactionPlayerLaunchedRPG, NULL, m_hMissile );
 			}
 		}
-	}*/
+	}
 }
 
 void CWeaponCustom::ShootProjectileLeft( bool isPrimary, bool usePrimaryAmmo )
 {
-#ifdef HL2
 	// Can't have an active missile out
 	if ( m_hMissile != NULL )
 		return;
 
 	if ( m_hMissile2 != NULL )
 		return;
-#endif
 
 	// Can't be reloading
 	if ( GetActivity() == ACT_VM_RELOAD )
@@ -986,9 +956,7 @@ void CWeaponCustom::ShootProjectileLeft( bool isPrimary, bool usePrimaryAmmo )
 
 	QAngle vecAngles;
 	VectorAngles( vForward, vecAngles );
-#ifdef HL2
 	m_hMissile2 = CMissile::Create( muzzlePoint, vecAngles, GetOwner()->edict() );
-#endif
 
 	//	m_hMissile2->m_hOwner = this;
 
@@ -996,10 +964,8 @@ void CWeaponCustom::ShootProjectileLeft( bool isPrimary, bool usePrimaryAmmo )
 	trace_t	tr;
 	Vector vecEye = pOwner->EyePosition();
 	UTIL_TraceLine( vecEye, vecEye + vForward * 128, MASK_SHOT, this, COLLISION_GROUP_NONE, &tr );
-#ifdef HL2
 	if ( tr.fraction == 1.0 )
 		m_hMissile2->SetGracePeriod( 0.3 );
-#endif
 	
 	// Register a muzzleflash for the AI
 	pOwner->SetMuzzleFlashTime( gpGlobals->curtime + 0.5 );
@@ -1047,7 +1013,6 @@ void CWeaponCustom::ShootProjectileLeft( bool isPrimary, bool usePrimaryAmmo )
 		}
 	}
 
-#ifdef HL2
 	if ( hl2_episodic.GetBool() )
 	{
 		CAI_BaseNPC **ppAIs = g_AI_Manager.AccessAIs();
@@ -1063,7 +1028,6 @@ void CWeaponCustom::ShootProjectileLeft( bool isPrimary, bool usePrimaryAmmo )
 			}
 		}
 	}
-#endif
 }
 
 void CWeaponCustom::ShootSMGGrenade( bool isPrimary, bool usePrimaryAmmo )
@@ -1329,14 +1293,12 @@ void CWeaponCustom::ShootAR2EnergyBall( bool isPrimary, bool usePrimaryAmmo )
 
 	// Fire the combine ball
 	const CustomWeaponInfo::WepDef& wpn = isPrimary ? GetWpnDataCustom().primary : GetWpnDataCustom().secondary;
-#ifdef HL2
 	CreateCombineBall( vecSrc,
 					   vecVelocity,
 					   wpn.combineBallRadius,
 					   wpn.combineBallMass,
 					   wpn.combineBallDuration,
 					   pOwner );
-#endif
 	
 	// View effects
 	color32 white = { 255, 255, 255, 64 };
@@ -1416,14 +1378,12 @@ void CWeaponCustom::ShootAR2EnergyBallRight( bool isPrimary, bool usePrimaryAmmo
 
 	// Fire the combine ball
 	const CustomWeaponInfo::WepDef& wpn = isPrimary ? GetWpnDataCustom().primary : GetWpnDataCustom().secondary;
-#ifdef HL2
 	CreateCombineBall( vecSrc,
 					   vecVelocity,
 					   wpn.combineBallRadius,
 					   wpn.combineBallMass,
 					   wpn.combineBallDuration,
 					   pOwner );
-#endif
 
 	// View effects
 	color32 white = { 255, 255, 255, 64 };
@@ -1504,14 +1464,12 @@ void CWeaponCustom::ShootAR2EnergyBallLeft( bool isPrimary, bool usePrimaryAmmo 
 
 	// Fire the combine ball
 	const CustomWeaponInfo::WepDef& wpn = isPrimary ? GetWpnDataCustom().primary : GetWpnDataCustom().secondary;
-#ifdef HL2
 	CreateCombineBall( vecSrc,
 					   vecVelocity,
 					   wpn.combineBallRadius,
 					   wpn.combineBallMass,
 					   wpn.combineBallDuration,
 					   pOwner );
-#endif
 
 	// View effects
 	color32 white = { 255, 255, 255, 64 };
@@ -1554,6 +1512,8 @@ void CWeaponCustom::ShootAR2EnergyBallLeft( bool isPrimary, bool usePrimaryAmmo 
 	else
 		m_flNextSecondaryAttack = gpGlobals->curtime + GetSecondaryFireRate();
 }
+#endif
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Output : Activity
@@ -1605,7 +1565,7 @@ void CWeaponCustom::PrimaryAttack( void )
 	if ( GetWpnDataCustom().primary.hasFire )
 	{
 		CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
-
+#ifdef HL2_DLL
 		if ( GetWpnDataCustom().primary.missleEnabled )
 		{
 			if ( GetWpnDataCustom().m_sDualWeapons )
@@ -1690,6 +1650,7 @@ void CWeaponCustom::PrimaryAttack( void )
 				ShootAR2EnergyBall( true, true );
 			}
 		}
+#endif
 		if ( IsPrimaryBullet() )
 		{
 			if ( GetWpnDataCustom().m_sDualWeapons )
@@ -1913,6 +1874,7 @@ void CWeaponCustom::SecondaryAttack( void )
 	{
 		CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
 
+#ifdef HL2_DLL
 		if ( GetWpnDataCustom().secondary.missleEnabled )
 		{
 			if ( GetWpnDataCustom().m_sDualWeapons )
@@ -1958,6 +1920,7 @@ void CWeaponCustom::SecondaryAttack( void )
 				ShootAR2EnergyBall( false, GetWpnDataCustom().m_sUsePrimaryAmmo );
 			}
 		}
+#endif
 		if ( IsSecondaryBullet() )
 		{
 			if ( GetWpnDataCustom().m_sDualWeapons )

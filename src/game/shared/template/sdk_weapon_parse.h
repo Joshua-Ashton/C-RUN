@@ -10,8 +10,6 @@
 #pragma once
 #endif
 
-
-#include "weapon_parse.h"
 #include "networkvar.h"
 
 #include "smmod/weapon_parse_custom_weapon.h"

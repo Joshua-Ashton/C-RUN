@@ -1,5 +1,5 @@
-#ifndef	C_WEAPONCUSTOM_H
-#define	C_WEAPONCUSTOM_H
+#ifndef	C_WEAPONCUSTOMPARSE_H
+#define	C_WEAPONCUSTOMPARSE_H
 #ifdef _WIN32
 #pragma once
 #endif
