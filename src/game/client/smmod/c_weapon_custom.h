@@ -8,7 +8,7 @@
 #include "hl2/c_basehlcombatweapon.h"
 #define CUSTOM_WEAPON_BASE C_HLSelectFireMachineGun
 #else
-#include "weapons/c_basesdkcombatweapon.h"
+#include "template/weapons/c_basesdkcombatweapon.h"
 #define CUSTOM_WEAPON_BASE C_SDKSelectFireMachineGun
 #endif
 
