@@ -96,8 +96,13 @@ ConVar mat_tonemap_min_avglum( "mat_tonemap_min_avglum", "3.0", FCVAR_CHEAT );
 ConVar mat_force_tonemap_scale( "mat_force_tonemap_scale", "0.0", FCVAR_CHEAT );
 ConVar mat_fullbright( "mat_fullbright", "0", FCVAR_CHEAT );
 
-ConVar mat_grain_enable( "mat_grain_enable", "0" );
-ConVar mat_vignette_enable( "mat_vignette_enable", "0" );
+#ifdef CRUN_DLL
+ConVar mat_grain_enable( "mat_grain_enable", "1" );
+ConVar mat_vignette_enable( "mat_vignette_enable", "1" );
+#else
+ConVar mat_grain_enable("mat_grain_enable", "0");
+ConVar mat_vignette_enable("mat_vignette_enable", "0");
+#endif
 ConVar mat_local_contrast_enable( "mat_local_contrast_enable", "0" );
 
 static void SetRenderTargetAndViewPort(ITexture *rt)
