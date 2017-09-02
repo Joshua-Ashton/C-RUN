@@ -759,7 +759,7 @@ void CGameMovement::UnlockTraceFilter( ITraceFilter *&pFilter )
 }
 
 #ifdef CRUN_DLL
-ConVar crun_slide_friction("crun_slide_friction", "2.1", FCVAR_REPLICATED | FCVAR_CHEAT);
+ConVar crun_slide_friction("crun_slide_friction", "0.93", FCVAR_REPLICATED | FCVAR_CHEAT);
 ConVar crun_crouch_penalty_friction("crun_crouch_penalty_friction", "6.9", FCVAR_REPLICATED | FCVAR_CHEAT);
 #endif
 
