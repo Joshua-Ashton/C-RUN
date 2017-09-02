@@ -12,23 +12,6 @@
 
 // ===Ammo/Damage===
 
-//Pistol
-ConVar	sk_plr_dmg_pistol			( "sk_plr_dmg_pistol","0", FCVAR_REPLICATED );
-ConVar	sk_npc_dmg_pistol			( "sk_npc_dmg_pistol","0", FCVAR_REPLICATED);
-ConVar	sk_max_pistol				( "sk_max_pistol","0", FCVAR_REPLICATED);
-
-//SMG
-ConVar	sk_plr_dmg_smg				( "sk_plr_dmg_smg","0", FCVAR_REPLICATED );
-ConVar	sk_npc_dmg_smg				( "sk_npc_dmg_smg","0", FCVAR_REPLICATED);
-ConVar	sk_max_smg					( "sk_max_smg","0", FCVAR_REPLICATED);
-
-//Shotgun
-ConVar	sk_plr_dmg_shotgun			( "sk_plr_dmg_shotgun","0", FCVAR_REPLICATED);	
-ConVar	sk_npc_dmg_shotgun			( "sk_npc_dmg_shotgun","0", FCVAR_REPLICATED);
-ConVar	sk_max_shotgun				( "sk_max_shotgun","0", FCVAR_REPLICATED);
-ConVar	sk_plr_num_shotgun_pellets	( "sk_plr_num_shotgun_pellets","7", FCVAR_REPLICATED);
-
-
 REGISTER_GAMERULES_CLASS( CSDKGameRules );
 
 void InitBodyQue() { }
@@ -87,15 +70,6 @@ bool CSDKGameRules::ShouldCollide( int collisionGroup0, int collisionGroup1 )
 CAmmoDef* GetAmmoDef()
 {
 	static CAmmoDef def;
-	static bool bInitted = false;
-	
-	if ( !bInitted )
-	{
-		bInitted = true;
-		def.AddAmmoType("Pistol",	DMG_BULLET,		TRACER_LINE_AND_WHIZ, "sk_plr_dmg_pistol",	"sk_npc_dmg_pistol", "sk_max_pistol", BULLET_IMPULSE(200, 1225), 0 );
-		def.AddAmmoType("SMG",		DMG_BULLET,	TRACER_LINE_AND_WHIZ, "sk_plr_dmg_smg", "sk_npc_dmg_smg", "sk_max_smg", BULLET_IMPULSE(200, 1225), 0 );
-		def.AddAmmoType("Shotgun",	DMG_BULLET | DMG_BUCKSHOT,	TRACER_LINE, "sk_plr_dmg_shotgun", "sk_npc_dmg_shotgun", "sk_max_shotgun", BULLET_IMPULSE(400, 1200), 0 );
-	}
 
 	return &def;
 }
@@ -114,7 +88,6 @@ void CSDKGameRules::PlayerThink( CBasePlayer *pPlayer )
 #ifdef GAME_DLL
 
 // This being required here is a bug. It should be in shared\BaseGrenade_shared.cpp
-ConVar sk_plr_dmg_grenade( "sk_plr_dmg_grenade","0");		
 
 class CVoiceGameMgrHelper : public IVoiceGameMgrHelper
 {

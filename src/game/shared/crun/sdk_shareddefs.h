@@ -22,7 +22,7 @@
 //========================
 
 // For GetGameDescription(). Mostly for MP.
-#define GAMENAME "CRUN"
+#define GAMENAME "C-RUN"
 
 //========================
 // PLAYER RELATED OPTIONS

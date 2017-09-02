@@ -1,7 +1,7 @@
 "GameInfo"
 {
-	game 		"CRUN"
-	title 		"CRUN"
+	game 		"C-RUN"
+	title 		"C-RUN"
 	type		singleplayer_only
 
     icon		game
