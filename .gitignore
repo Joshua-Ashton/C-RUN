@@ -63,8 +63,15 @@ game/platform/config/serverbrowser\.vdf
 
 game/crun/run_mod_fullscreen\.bat
 
+src/lib/public/shaderlib.lib
+
 game/bin/CmdSeq\.wc
 
 *.vdf
+
+game/crun/save
+*.sav
+
+src/.vs
 
 game/bin/GameConfig\.txt\.txt
