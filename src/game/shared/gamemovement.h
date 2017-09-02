@@ -247,6 +247,8 @@ protected:
 	virtual ITraceFilter *LockTraceFilter( int collisionGroup );
 	virtual void UnlockTraceFilter( ITraceFilter *&pFilter );
 
+	float GetFriction();
+
 	// Performs the collision resolution for fliers.
 	void			PerformFlyCollisionResolution( trace_t &pm, Vector &move );
 

@@ -758,6 +758,25 @@ void CGameMovement::UnlockTraceFilter( ITraceFilter *&pFilter )
 	pFilter = NULL;
 }
 
+#ifdef CRUN_DLL
+ConVar crun_slide_friction("crun_slide_friction", "2.1", FCVAR_REPLICATED | FCVAR_CHEAT);
+ConVar crun_crouch_penalty_friction("crun_crouch_penalty_friction", "6.9", FCVAR_REPLICATED | FCVAR_CHEAT);
+#endif
+
+float CGameMovement::GetFriction()
+{
+#ifdef CRUN_DLL
+	if (mv->m_nButtons & IN_DUCK && mv->m_vecVelocity.Length() > crun_walkspeed.GetFloat())
+	{
+		return crun_slide_friction.GetFloat();
+	}
+	else if (mv->m_nButtons & IN_DUCK)
+	{
+		return crun_crouch_penalty_friction.GetFloat();
+	}
+#endif
+	return sv_friction.GetFloat();
+}
 
 //-----------------------------------------------------------------------------
 // Purpose: Allow bots etc to use slightly different solid masks
@@ -1615,7 +1634,7 @@ void CGameMovement::WaterMove( void )
 	speed = VectorNormalize(temp);
 	if (speed)
 	{
-		newspeed = speed - gpGlobals->frametime * speed * sv_friction.GetFloat() * player->m_surfaceFriction;
+		newspeed = speed - gpGlobals->frametime * speed * GetFriction() * player->m_surfaceFriction;
 		if (newspeed < 0.1f)
 		{
 			newspeed = 0;
@@ -1831,7 +1850,7 @@ void CGameMovement::Friction( void )
 	// apply ground friction
 	if (player->GetGroundEntity() != NULL)  // On an entity that is the ground
 	{
-		friction = sv_friction.GetFloat() * player->m_surfaceFriction;
+		friction = GetFriction() * player->m_surfaceFriction;
 
 		// Bleed off some speed, but if we have less than the bleed
 		//  threshold, bleed the threshold amount.
@@ -2436,7 +2455,7 @@ void CGameMovement::FullObserverMove( void )
 		return;
 	}
 		
-	float friction = sv_friction.GetFloat();
+	float friction = GetFriction();
 					
 	// Add the amount to the drop amount.
 	float drop = spd * friction * gpGlobals->frametime;
@@ -2521,7 +2540,7 @@ void CGameMovement::FullNoClipMove( float factor, float maxacceleration )
 		//  threshhold, bleed the theshold amount.
 		float control = (spd < maxspeed/4.0) ? maxspeed/4.0 : spd;
 		
-		float friction = sv_friction.GetFloat() * player->m_surfaceFriction;
+		float friction = GetFriction() * player->m_surfaceFriction;
 				
 		// Add the amount to the drop amount.
 		float drop = control * friction * gpGlobals->frametime;
