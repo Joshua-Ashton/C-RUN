@@ -1,1 +1,0 @@
-@"../swarm.exe" -fullscreen -w 1920 -h 1080 -game crun
