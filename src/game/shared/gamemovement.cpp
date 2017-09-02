@@ -759,20 +759,31 @@ void CGameMovement::UnlockTraceFilter( ITraceFilter *&pFilter )
 }
 
 #ifdef CRUN_DLL
-ConVar crun_slide_friction("crun_slide_friction", "0.93", FCVAR_REPLICATED | FCVAR_CHEAT);
+ConVar crun_slide_friction("crun_slide_friction", "0.73", FCVAR_REPLICATED | FCVAR_CHEAT);
 ConVar crun_crouch_penalty_friction("crun_crouch_penalty_friction", "6.9", FCVAR_REPLICATED | FCVAR_CHEAT);
+ConVar crun_crouch_depenalising_acceleration("crun_crouch_depenalising_acceleration", "6.5", FCVAR_REPLICATED | FCVAR_CHEAT);
+
 #endif
+
+float CGameMovement::GetAccelerate()
+{
+#ifdef CRUN_DLL
+	if (mv->m_nButtons & IN_DUCK)
+		return crun_crouch_depenalising_acceleration.GetFloat();
+#endif
+
+	return sv_accelerate.GetFloat();
+}
 
 float CGameMovement::GetFriction()
 {
 #ifdef CRUN_DLL
-	if (mv->m_nButtons & IN_DUCK && mv->m_vecVelocity.Length() > crun_walkspeed.GetFloat())
+	if (mv->m_nButtons & IN_DUCK)
 	{
-		return crun_slide_friction.GetFloat();
-	}
-	else if (mv->m_nButtons & IN_DUCK)
-	{
-		return crun_crouch_penalty_friction.GetFloat();
+		if (mv->m_vecVelocity.Length() > crun_walkspeed.GetFloat())
+			return crun_slide_friction.GetFloat();
+		else
+			return crun_crouch_penalty_friction.GetFloat();
 	}
 #endif
 	return sv_friction.GetFloat();
@@ -1654,7 +1665,7 @@ void CGameMovement::WaterMove( void )
 		if (addspeed > 0)
 		{
 			VectorNormalize(wishvel);
-			accelspeed = sv_accelerate.GetFloat() * wishspeed * gpGlobals->frametime * player->m_surfaceFriction;
+			accelspeed = GetAccelerate() * wishspeed * gpGlobals->frametime * player->m_surfaceFriction;
 			if (accelspeed > addspeed)
 			{
 				accelspeed = addspeed;
@@ -2160,8 +2171,13 @@ void CGameMovement::WalkMove( void )
 	wishvel[2] = 0;             // Zero out z part of velocity
 
 	VectorCopy (wishvel, wishdir);   // Determine maginitude of speed of move
-	wishspeed = VectorNormalize(wishdir);
 
+#ifdef CRUN_DLL
+	if (mv->m_nButtons & IN_DUCK && mv->m_vecVelocity.Length() > crun_walkspeed.GetFloat())
+		wishdir = mv->m_vecVelocity;
+#endif
+
+	wishspeed = VectorNormalize(wishdir);
 	//
 	// Clamp to server defined max speed
 	//
@@ -2173,7 +2189,7 @@ void CGameMovement::WalkMove( void )
 
 	// Set pmove velocity
 	mv->m_vecVelocity[2] = 0;
-	Accelerate ( wishdir, wishspeed, sv_accelerate.GetFloat() );
+	Accelerate ( wishdir, wishspeed, GetAccelerate() );
 	mv->m_vecVelocity[2] = 0;
 
 	// Add in any base velocity to the current velocity.
@@ -5022,7 +5038,7 @@ void CGameMovement::FullTossMove( void )
 		}
 
 		// Set pmove velocity
-		Accelerate ( wishdir, wishspeed, sv_accelerate.GetFloat() );
+		Accelerate ( wishdir, wishspeed, GetAccelerate() );
 	}
 
 	if ( mv->m_vecVelocity[2] > 0 )

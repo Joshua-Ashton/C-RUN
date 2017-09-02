@@ -36,7 +36,6 @@
 ConVar g_Language( "g_Language", "0", FCVAR_REPLICATED );
 ConVar sk_autoaim_mode( "sk_autoaim_mode", "1", FCVAR_ARCHIVE | FCVAR_REPLICATED );
 
-#ifndef CRUN_DLL
 static CViewVectors g_DefaultViewVectors(
 	Vector( 0, 0, 64 ),			//VEC_VIEW (m_vView)
 								
@@ -51,24 +50,8 @@ static CViewVectors g_DefaultViewVectors(
 	Vector( 10,  10,  10 ),		//VEC_OBS_HULL_MAX	(m_vObsHullMax)
 													
 	Vector( 0, 0, 14 )			//VEC_DEAD_VIEWHEIGHT (m_vDeadViewHeight)
-);
-#else
-static CViewVectors g_DefaultViewVectors(
-	Vector( 0, 0, 64 ),			//VEC_VIEW (m_vView)
-								
-	Vector(-16, -16, 0 ),		//VEC_HULL_MIN (m_vHullMin)
-	Vector( 16,  16,  72 ),		//VEC_HULL_MAX (m_vHullMax)
+);													
 													
-	Vector(-16, -16, 0 ),		//VEC_DUCK_HULL_MIN (m_vDuckHullMin)
-	Vector( 16,  16,  32 ),		//VEC_DUCK_HULL_MAX	(m_vDuckHullMax)
-	Vector( 0, 0, 24 ),			//VEC_DUCK_VIEW		(m_vDuckView)
-													
-	Vector(-10, -10, -10 ),		//VEC_OBS_HULL_MIN	(m_vObsHullMin)
-	Vector( 10,  10,  10 ),		//VEC_OBS_HULL_MAX	(m_vObsHullMax)
-													
-	Vector( 0, 0, 14 )			//VEC_DEAD_VIEWHEIGHT (m_vDeadViewHeight)
-);				
-#endif
 
 // ------------------------------------------------------------------------------------ //
 // CGameRulesProxy implementation.
