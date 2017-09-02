@@ -66,3 +66,5 @@ game/crun/run_mod_fullscreen\.bat
 game/bin/CmdSeq\.wc
 
 *.vdf
+
+game/bin/GameConfig\.txt\.txt
