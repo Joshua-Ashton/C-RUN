@@ -20,8 +20,8 @@
 #include "sdk_player_shared.h"
 ConVar crun_viewbob("crun_viewbob", "1", FCVAR_ARCHIVE | FCVAR_CLIENTDLL);
 // Our Player walk speed value.
-ConVar crun_runspeed("crun_runspeed", "420");
-ConVar crun_walkspeed("crun_walkspeed", "210");
+ConVar crun_runspeed("crun_runspeed", "420", FCVAR_REPLICATED);
+ConVar crun_walkspeed("crun_walkspeed", "210", FCVAR_REPLICATED);
 #endif
 
 #if (PREDICTION_ERROR_CHECK_LEVEL > 0) && (PREDICTION_ERROR_CHECK_STACKS_FOR_MISSING > 0)
