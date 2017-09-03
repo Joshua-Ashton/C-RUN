@@ -296,14 +296,27 @@ bool CSingleplayRules::Damage_ShouldNotBleed( int iDmgType )
 	{
 	}
 
+#include "in_buttons.h"
+
 	//=========================================================
 	//=========================================================
 	float CSingleplayRules::FlPlayerFallDamage( CBasePlayer *pPlayer )
 	{
+
+#ifdef CRUN_DLL
+		float extraFallSpeed = 0.0f;
+		if (pPlayer->m_nButtons & IN_DUCK)
+			extraFallSpeed = PLAYER_MAX_SAFE_FALL_SPEED / 2;
+
+		pPlayer->m_Local.m_flFallVelocity -= (PLAYER_MAX_SAFE_FALL_SPEED + extraFallSpeed);
+		return pPlayer->m_Local.m_flFallVelocity * DAMAGE_FOR_FALL_SPEED;
+#else
 		// subtract off the speed at which a player is allowed to fall without being hurt,
 		// so damage will be based on speed beyond that, not the entire fall
+
 		pPlayer->m_Local.m_flFallVelocity -= PLAYER_MAX_SAFE_FALL_SPEED;
 		return pPlayer->m_Local.m_flFallVelocity * DAMAGE_FOR_FALL_SPEED;
+#endif	
 	}
 
 	//=========================================================

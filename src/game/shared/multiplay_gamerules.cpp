@@ -517,12 +517,19 @@ CMultiplayRules::CMultiplayRules()
 	//=========================================================
 	float CMultiplayRules::FlPlayerFallDamage( CBasePlayer *pPlayer )
 	{
-		int iFallDamage = (int)falldamage.GetFloat();
+#ifdef CRUN_DLL
+		float extraFallSpeed = 0.0f;
+		if (pPlayer->m_nButtons & IN_DUCK)
+			extraFallSpeed = PLAYER_MAX_SAFE_FALL_SPEED / 2;
 
+		pPlayer->m_Local.m_flFallVelocity -= (PLAYER_MAX_SAFE_FALL_SPEED + extraFallSpeed);
+		return pPlayer->m_Local.m_flFallVelocity * DAMAGE_FOR_FALL_SPEED;
+#else
+		int iFallDamage = (int)falldamage.GetFloat();
 		switch ( iFallDamage )
 		{
 		case 1://progressive
-			pPlayer->m_Local.m_flFallVelocity -= PLAYER_MAX_SAFE_FALL_SPEED;
+			pPlayer->m_Local.m_flFallVelocity -= (PLAYER_MAX_SAFE_FALL_SPEED + extraFallSpeed);
 			return pPlayer->m_Local.m_flFallVelocity * DAMAGE_FOR_FALL_SPEED;
 			break;
 		default:
@@ -530,6 +537,7 @@ CMultiplayRules::CMultiplayRules()
 			return 10;
 			break;
 		}
+#endif
 	} 
 
 	//=========================================================
