@@ -21,10 +21,10 @@
 	{	
 		"ControlName"				"BaseModHybridButton"
 		"fieldName"				"BtnContinueGame"
-		"xpos"					"100"
+		"xpos"					"0"
 		"ypos"					"250" //"250" 30
-		"wide"					"210"
-		"tall"					"13"
+		"wide"					"280"
+		"tall"					"16"
 		"autoResize"				"1"
 		"pinCorner"				"0"
 		"visible"				"1"
@@ -46,10 +46,10 @@
 	{
 		"ControlName"			"BaseModHybridButton"
 		"fieldName"				"BtnSingleplayer"
-		"xpos"					"100"
-		"ypos"					"265" // "265" 45
-		"wide"					"180"
-		"tall"					"13"
+		"xpos"					"0"
+		"ypos"					"270" // "265" 45
+		"wide"					"280"
+		"tall"					"16"
 		"autoResize"				"1"
 		"pinCorner"				"0"
 		"visible"				"1"
@@ -63,41 +63,16 @@
 		"command"				"SoloPlay"	
 		"ActivationType"			"1"
 	}
-			
-	"BtnChangeGamers"
-	{
-		"ControlName"			"BaseModHybridButton"
-		"fieldName"				"BtnChangeGamers"
-		"xpos"					"100"
-		"ypos"					"260"
-		"wide"					"180"
-		"tall"					"20"
-		"autoResize"				"1"
-		"pinCorner"				"0"
-		"visible"				"0"		[!$X360GUEST]
-		"enabled"				"0"		[!$X360GUEST]
-		"visible"				"1"		[$X360GUEST]
-		"enabled"				"1"		[$X360GUEST]
-		"tabPosition"				"0"
-		"navUp"					"BtnSingleplayer"
-		"navDown"				"BtnOptions"
-		"labelText"				"#L4D360UI_MainMenu_SignIn"
-		"tooltiptext"			"#L4D360UI_MainMenu_ChangeGamers_Tip"
-		"style"					"MainMenuButton"
-		"command"				"ChangeGamers"
-		"ActivationType"			"1"
-	}	
-		
 
 	
 	"BtnOptions"
 	{
 		"ControlName"			"BaseModHybridButton"
 		"fieldName"				"BtnOptions"
-		"xpos"					"100"
-		"ypos"					"280"
-		"wide"					"180"
-		"tall"					"13"
+		"xpos"					"0"
+		"ypos"					"290"
+		"wide"					"280"
+		"tall"					"16"
 		"autoResize"				"1"
 		"pinCorner"				"0"
 		"visible"				"1"
@@ -118,10 +93,10 @@
 //	{
 //		"ControlName"				"BaseModHybridButton"
 //		"fieldName"				"BtnStatsAndAchievements"
-//		"xpos"					"100"
+//		"xpos"					"0"
 //		"ypos"					"265"
 //		"wide"					"210"
-//		"tall"					"13"
+//		"tall"					"16"
 //		"autoResize"				"1"
 //		"pinCorner"				"0"
 //		"visible"				"0"		[$X360GUEST]
@@ -144,13 +119,13 @@
 	{
 		"ControlName"				"BaseModHybridButton"
 		"fieldName"				"BtnExtras"
-		"xpos"					"100"
-		"ypos"					"295" 
-		"wide"					"180"
-		"tall"					"13"
+		"xpos"					"0"
+		"ypos"					"310" 
+		"wide"					"280"
+		"tall"					"16"
 		"autoResize"				"1"
 		"pinCorner"				"0"
-		"visible"				"0" //No show unless we atleast have dev commentary
+		"visible"				"1" //No show unless we atleast have dev commentary
 		"enabled"				"1"
 		"tabPosition"				"0"
 		"navUp"					"BtnOptions"
@@ -160,18 +135,16 @@
 		"style"					"AlienSwarmMenuButton"	
 		"command"				"FlmExtrasFlyoutCheck"
 		"ActivationType"			"1"
-		"EnableCondition"			"Never" [$DEMO]
 	}
 
 	"BtnQuit"
 	{
 		"ControlName"			"BaseModHybridButton"
 		"fieldName"				"BtnQuit"
-		"xpos"					"100"
-		"ypos"					"310"   [$X360]
-		"ypos"					"310"	[$WIN32]
-		"wide"					"180"
-		"tall"					"13"
+		"xpos"					"0"
+		"ypos"					"330"
+		"wide"					"280"
+		"tall"					"16"
 		"autoResize"			"1"
 		"pinCorner"				"0"
 		"visible"				"0"		[$X360]
@@ -285,7 +258,7 @@
 	{
 		"ControlName"			"Label"
 		"fieldName"				"LblPlayer1GamerTag"
-		"xpos"					"100"
+		"xpos"					"0"
 		"ypos"					"r120"
 		"wide"					"300"
 		"tall"					"16"
@@ -304,7 +277,7 @@
 	{
 		"ControlName"			"Label"
 		"fieldName"				"LblPlayer2GamerTag"
-		"xpos"					"100"
+		"xpos"					"0"
 		"ypos"					"r100"
 		"wide"					"300"
 		"tall"					"16"
@@ -322,7 +295,7 @@
 	{
 		"ControlName"			"Label"
 		"fieldName"				"LblPlayer2Enable"
-		"xpos"					"100"
+		"xpos"					"0"
 		"ypos"					"r100"
 		"wide"					"300"
 		"tall"					"16"
@@ -340,7 +313,7 @@
 	{
 		"ControlName"			"Label"
 		"fieldName"				"LblPlayer2DisableIcon"
-		"xpos"					"100"
+		"xpos"					"0"
 		"ypos"					"r140"
 		"wide"					"30"
 		"tall"					"16"

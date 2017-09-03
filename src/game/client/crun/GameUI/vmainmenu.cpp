@@ -642,6 +642,8 @@ void MainMenu::Activate()
 //=============================================================================
 void MainMenu::PaintBackground() 
 {
+	vgui::surface()->DrawSetColor(Color(0, 0, 0, 255));
+	vgui::surface()->DrawFilledRectFade(0, 0, ScreenWidth() / 2, ScreenHeight(), 255, 0, true);
 }
 
 void MainMenu::SetFooterState()
@@ -670,7 +672,7 @@ void MainMenu::ApplySchemeSettings( IScheme *pScheme )
 
 	//LoadControlSettings( "Resource/UI/BaseModUI/MainMenu.res" );
 
-	//SetPaintBackgroundEnabled( true );
+	SetPaintBackgroundEnabled( true );
 
 	//SetFooterState();
 

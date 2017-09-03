@@ -333,6 +333,8 @@ void BaseModHybridButton::SetHelpText( const char* tooltip, bool enabled )
 	}
 }
 
+#include "vmainmenu.h"
+
 // 0 = Deprecated CA buttons
 // 1 = Normal Button
 // 2 = MainMenu Button or InGameMenu Butto
@@ -342,6 +344,8 @@ void BaseModHybridButton::PaintButtonEx()
 	vgui::IScheme *pScheme = vgui::scheme()->GetIScheme( GetScheme() );
 	Color blotchColor = pScheme->GetColor( "HybridButton.BlotchColor", Color( 0, 0, 0, 255 ) );
 	Color borderColor = pScheme->GetColor( "HybridButton.BorderColor", Color( 0, 0, 0, 255 ) );
+
+	bool bFlyout = !dynamic_cast<MainMenu*>(GetParent());
 
 	int x, y;
 	int wide, tall;
@@ -380,37 +384,57 @@ void BaseModHybridButton::PaintButtonEx()
 			}
 			else if ( m_nStyle == BUTTON_ALIENSWARMMENUBUTTON || m_nStyle == BUTTON_ALIENSWARMMENUBUTTONSMALL )
 			{
-				col.SetColor( 135, 170, 193, 255 );
+				col.SetColor( 200, 200, 200, 255 );
+
+				if (!bFlyout)
+				{
+					vgui::surface()->DrawSetColor(Color(0, 0, 0, 128));
+					vgui::surface()->DrawFilledRect(x, y, x + wide, y + tall);
+				}
 			}
 			else
 			{
 				//col.SetColor( 125, 125, 125, 255 );
-				col.SetColor( 83, 148, 192, 255 );
+				col.SetColor(200, 200, 200, 255);
 			}
 			break;
 		case Disabled:
 			//col.SetColor( 88, 97, 104, 255 );
 			//col.SetColor( 65, 74, 96, 255 );
-			col.SetColor( 32, 59, 82, 255 );
+			col.SetColor( 128, 128, 128, 255 );
 			bDrawText = true;
 			bDrawGlow = false;
 			break;
 		case FocusDisabled:
-			col.SetColor( 182, 189, 194, 255 );
+			col.SetColor(200, 200, 200, 255);
 			bDrawText = false;
-			bDrawGlow = true;
+			bDrawGlow = false;
 			break;
 		case Open:
 			// flyout menu is attached
 			//col.SetColor( 200, 200, 200, 255 );
-			col.SetColor( 169, 213, 255, 255 );
-			bDrawGlow = true;
+
+			if (!bFlyout)
+			{
+				vgui::surface()->DrawSetColor(Color(0, 0, 0, 255));
+				vgui::surface()->DrawFilledRect(x, y, x + wide, y + tall);
+			}
+
+			col.SetColor( 255, 255, 255, 255 );
+			bDrawGlow = false;
 			bDrawCursor = true;
 			break;
 		case Focus:
 			// active item
-			col.SetColor( 255, 255, 255, 255 );
-			bDrawGlow = true;
+			col.SetColor( 0, 0, 0, 255 );
+
+			if (!bFlyout)
+			{
+				vgui::surface()->DrawSetColor(Color(200, 200, 200, 255));
+				vgui::surface()->DrawFilledRect(x, y, x + wide, y + tall);
+			}
+
+			bDrawGlow = false;
 			bAnimateGlow = true;
 			if ( m_nStyle == BUTTON_SIMPLE ||
 				 m_nStyle == BUTTON_DROPDOWN ||
@@ -427,7 +451,7 @@ void BaseModHybridButton::PaintButtonEx()
 	int len = V_wcslen( szUnicode );
 
 	int textWide, textTall;
-	surface()->GetTextSize( m_hTextFont, szUnicode, textWide, textTall );
+	vgui::surface()->GetTextSize( m_hTextFont, szUnicode, textWide, textTall );
 
 	textWide = clamp( textWide, 0, wide - m_textInsetX * 2 );
 	textTall = clamp( textTall, 0, tall - m_textInsetX * 2 );
@@ -442,60 +466,6 @@ void BaseModHybridButton::PaintButtonEx()
 	if ( FlyoutMenu::GetActiveMenu() && FlyoutMenu::GetActiveMenu()->GetNavFrom() != this )
 	{
 		bDrawCursor = false;
-	}
-
-	if ( bDrawCursor )
-	{
-		// draw backing rectangle
-		if ( curState == Open )
-		{
-			surface()->DrawSetColor( Color( 0, 0, 0, 255 ) );
-			surface()->DrawFilledRectFade( x, y, x+wide, y+tall, 0, 255, true );
-		}
-
-		// draw blotch
-		surface()->DrawSetColor( blotchColor );
-		if ( m_nStyle == BUTTON_DIALOG )
-		{
-			int blotchWide = textWide;
-			int blotchX = x + textInsetX;
-			surface()->DrawFilledRectFade( blotchX, y, blotchX + 0.50f * blotchWide, y+tall, 0, 150, true );
-			surface()->DrawFilledRectFade( blotchX + 0.50f * blotchWide, y, blotchX + blotchWide, y+tall, 150, 0, true );
-		}
-		else
-		{
-			int blotchWide = textWide + vgui::scheme()->GetProportionalScaledValueEx( GetScheme(), 40 );
-			int blotchX = x + textInsetX;
-			surface()->DrawFilledRectFade( blotchX, y, blotchX + 0.25f * blotchWide, y+tall, 0, 150, true );
-			surface()->DrawFilledRectFade( blotchX + 0.25f * blotchWide, y, blotchX + blotchWide, y+tall, 150, 0, true );
-		}
-
-		// draw border lines
-		surface()->DrawSetColor( borderColor );
-		if ( curState == Open )
-		{
-			FlyoutMenu *pActiveFlyout = FlyoutMenu::GetActiveMenu();
-			BaseModHybridButton *button = dynamic_cast< BaseModHybridButton* >( pActiveFlyout ? pActiveFlyout->GetNavFrom() : NULL );
-			if ( pActiveFlyout && pActiveFlyout->GetOriginalTall() == 0 && button && button == this )
-			{
-				surface()->DrawFilledRectFade( x, y, x + wide, y+2, 255, 0, true );
-			}
-			else
-			{
-				// the border lines end at the beginning of the flyout
-				// the flyout will draw to complete the look
-				surface()->DrawFilledRectFade( x, y, x + wide, y+2, 0, 255, true );
-				surface()->DrawFilledRectFade( x, y+tall-2, x + wide, y+tall, 0, 255, true );
-			}
-		}
-		else
-		{
-			// top and bottom border lines
-			surface()->DrawFilledRectFade( x, y, x + 0.5f * wide, y+2, 0, 255, true );
-			surface()->DrawFilledRectFade( x + 0.5f * wide, y, x + wide, y+2, 255, 0, true );
-			surface()->DrawFilledRectFade( x, y+tall-2, x + 0.5f * wide, y+tall, 0, 255, true );
-			surface()->DrawFilledRectFade( x + 0.5f * wide, y+tall-2, x + wide, y+tall, 255, 0, true );
-		}
 	}
 
 	// assume drawn, unless otherwise shortened with ellipsis
@@ -542,7 +512,6 @@ void BaseModHybridButton::PaintButtonEx()
 		}
 
 		vgui::surface()->DrawSetTextFont( m_hTextFont );
-		vgui::surface()->DrawSetTextPos( x + textInsetX, y + m_textInsetY  );
 		vgui::surface()->DrawSetTextColor( col );
 
 		if ( textWide > availableWidth )
@@ -568,7 +537,19 @@ void BaseModHybridButton::PaintButtonEx()
 		}
 		else
 		{
-			vgui::surface()->DrawUnicodeString( szUnicode );
+			int textWide, textTall;
+
+			if (!bFlyout)
+			{
+				vgui::surface()->GetTextSize(m_hTextFont, szUnicode, textWide, textTall);
+				vgui::surface()->DrawSetTextPos(wide - textWide - 24, y + ((tall / 2) - (textTall / 2)));
+				vgui::surface()->DrawUnicodeString(szUnicode);
+			}
+			else
+			{
+				vgui::surface()->DrawSetTextPos(x + m_textInsetX, y + m_textInsetY);
+				vgui::surface()->DrawUnicodeString(szUnicode);
+			}
 		}
 	}
 	else if ( GetCurrentState() == Disabled || GetCurrentState() == FocusDisabled )
