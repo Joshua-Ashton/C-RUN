@@ -54,7 +54,11 @@ float g_flDOFFarBlurRadius = 5.0f;
 bool g_bFlashlightIsOn = false;
 
 // hdr parameters
-ConVar mat_bloomscale( "mat_bloomscale", "1" );
+#ifdef CRUN_DLL
+ConVar mat_bloomscale( "mat_bloomscale", "1.5" );
+#else
+ConVar mat_bloomscale("mat_bloomscale", "1");
+#endif
 
 ConVar mat_hdr_level( "mat_hdr_level", "2" );
 ConVar mat_bloomamount_rate( "mat_bloomamount_rate", "0.05f", FCVAR_CHEAT );
@@ -81,7 +85,11 @@ ConVar mat_hdr_manual_tonemap_rate( "mat_hdr_manual_tonemap_rate", "1.0" );
 ConVar mat_non_hdr_bloom_scalefactor("mat_non_hdr_bloom_scalefactor",".3");
 
 // Apply addition scale to the final bloom scale
-static ConVar mat_bloom_scalefactor_scalar( "mat_bloom_scalefactor_scalar", "1.0", FCVAR_RELEASE );
+#ifdef CRUN_DLL
+static ConVar mat_bloom_scalefactor_scalar( "mat_bloom_scalefactor_scalar", "2.2", FCVAR_RELEASE );
+#else
+static ConVar mat_bloom_scalefactor_scalar("mat_bloom_scalefactor_scalar", "1.0", FCVAR_RELEASE);
+#endif
 
 //ConVar mat_exposure_center_region_x( "mat_exposure_center_region_x","0.75", FCVAR_CHEAT );
 //ConVar mat_exposure_center_region_y( "mat_exposure_center_region_y","0.80", FCVAR_CHEAT );
