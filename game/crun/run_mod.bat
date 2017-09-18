@@ -1,1 +1,1 @@
-@"../crun.exe"
+@"../crun.exe" -windowed
