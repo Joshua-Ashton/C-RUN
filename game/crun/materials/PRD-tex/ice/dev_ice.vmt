@@ -1,0 +1,5 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "PRD-tex/ice/dev_ice"
+	"$surfaceprop" "Ice"
+}
