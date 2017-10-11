@@ -2600,6 +2600,10 @@ void CGameMovement::PlaySwimSound()
 	MoveHelper()->StartSound( mv->GetAbsOrigin(), "Player.Swim" );
 }
 
+#ifdef CRUN_DLL
+ConVar crun_walljump_power_multiplier("crun_walljump_power_multiplier", "1.2", FCVAR_REPLICATED);
+#endif
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -2646,12 +2650,11 @@ bool CGameMovement::CheckJumpButton( void )
 #ifdef CRUN_DLL
 	// No more effect
 	bool wallJump = false;
-	trace_t tr;
 
 	Vector forward, right, up;
 	Vector wallJumpDir;
 
-	if (player->GetGroundEntity() == NULL && (mv->m_nButtons & IN_MOVELEFT || mv->m_nButtons & IN_MOVERIGHT))
+	if (!(mv->m_nOldButtons & IN_JUMP) && player->GetGroundEntity() == NULL && (mv->m_nButtons & IN_MOVELEFT || mv->m_nButtons & IN_MOVERIGHT))
 	{
 		player->GetVectors(&forward, &right, &up);
 		forward.NormalizeInPlace();
@@ -2663,16 +2666,24 @@ bool CGameMovement::CheckJumpButton( void )
 		else
 			wallJumpDir = right;
 
+		trace_t tr;
 		Ray_t ray;
-		ray.Init(mv->GetAbsOrigin(), mv->GetAbsOrigin() + (wallJumpDir * 8.0f), player->GetPlayerMins(), player->GetPlayerMaxs());
+		ray.Init(mv->GetAbsOrigin(), mv->GetAbsOrigin() + (wallJumpDir * 12.0f), player->GetPlayerMins(), player->GetPlayerMaxs()); // upped to 12 for some leniency
+ 		UTIL_TraceRay(ray, MASK_PLAYERSOLID, player, COLLISION_GROUP_PLAYER_MOVEMENT, &tr);
 
- 		UTIL_TraceRay(ray, MASK_PLAYERSOLID_BRUSHONLY, player, COLLISION_GROUP_PLAYER_MOVEMENT, &tr);
- 		wallJump = tr.DidHitWorld();
+		trace_t floorDistanceTr;
+		Ray_t floorDistanceRay;
+		floorDistanceRay.Init(mv->GetAbsOrigin(), mv->GetAbsOrigin() - (up * 48.0f), player->GetPlayerMins(), player->GetPlayerMaxs());
+		UTIL_TraceRay(floorDistanceRay, MASK_PLAYERSOLID, player, COLLISION_GROUP_PLAYER_MOVEMENT, &floorDistanceTr);
+
+		wallJump = tr.DidHit() && !floorDistanceTr.DidHit();
 
 		if (wallJump)
 		{
-			float punch = (wallJumpDir.x * 4);
-			player->ViewPunch(QAngle(punch, - fabsf(punch / 2), 0));
+			float punchSign = mv->m_nButtons & IN_MOVELEFT ? -1.0f : 1.0f;
+
+			float punch = (punchSign * 4);
+			player->ViewPunch(QAngle(punch * 1.41421356, - fabsf(punch), 0));
 
 			if (mv->m_nButtons & IN_MOVELEFT)
 				mv->m_nLastWallJumpButton = IN_MOVELEFT;
@@ -2847,13 +2858,13 @@ bool CGameMovement::CheckJumpButton( void )
 			// v = g * sqrt(2.0 * 45 / g )
 			// v^2 = g * g * 2.0 * 45 / g
 			// v = sqrt( g * 2.0 * 45 )
-			velocity[2] = flMul * 0.81f;  // 2 * gravity * height
-			velocity += wallJumpDir * (flMul) * -1.0f;  // 2 * gravity * height
+			velocity[2] = flMul * crun_walljump_power_multiplier.GetFloat() * 0.81f;  // 2 * gravity * height
+			velocity += wallJumpDir * (flMul) * crun_walljump_power_multiplier.GetFloat() * -1.0f;  // 2 * gravity * height
 		}
 		else
 		{
-			velocity[2] += flMul * 0.81f;  // 2 * gravity * height
-			velocity += wallJumpDir * (flMul) * -1.0f;
+			velocity[2] += flMul * crun_walljump_power_multiplier.GetFloat() * 0.81f;  // 2 * gravity * height
+			velocity += wallJumpDir * (flMul) * crun_walljump_power_multiplier.GetFloat() * -1.0f;
 		}
 
 		FinishGravity();
@@ -2863,10 +2874,7 @@ bool CGameMovement::CheckJumpButton( void )
 		mv->m_outJumpVel += mv->m_vecVelocity - startVelocity;
 		mv->m_outStepHeight += 0.15f;
 
-
 		bool bSetDuckJump = (gpGlobals->maxClients == 1); //most games we only set duck jump if the game is single player
-
-
 														  // Set jump time.
 		if (bSetDuckJump)
 		{
