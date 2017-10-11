@@ -45,8 +45,6 @@ extern IFileSystem *filesystem;
 	static ConVar dispcoll_drawplane( "dispcoll_drawplane", "0" );
 #endif
 
-
-
 // tickcount currently isn't set during prediction, although gpGlobals->curtime and
 // gpGlobals->frametime are. We should probably set tickcount (to player->m_nTickBase),
 // but we're REALLY close to shipping, so we can change that later and people can use
@@ -2012,8 +2010,14 @@ void CGameMovement::AirMove( void )
 		VectorScale (wishvel, mv->m_flMaxSpeed/wishspeed, wishvel);
 		wishspeed = mv->m_flMaxSpeed;
 	}
-	
-	AirAccelerate( wishdir, wishspeed, sv_airaccelerate.GetFloat() );
+
+#ifdef CRUN_DLL
+	if ( !((mv->m_nButtons & IN_MOVELEFT || mv->m_nButtons & IN_MOVERIGHT) && mv->m_nLastWallJumpButton && mv->m_nButtons & mv->m_nLastWallJumpButton) )
+		mv->m_nLastWallJumpButton = 0;
+
+	if (!(mv->m_nButtons & mv->m_nLastWallJumpButton && mv->m_nLastWallJumpButton != 0))
+#endif
+		AirAccelerate(wishdir, wishspeed, sv_airaccelerate.GetFloat());
 
 	// Add in any base velocity to the current velocity.
 	VectorAdd(mv->m_vecVelocity, player->GetBaseVelocity(), mv->m_vecVelocity );
@@ -2596,7 +2600,6 @@ void CGameMovement::PlaySwimSound()
 	MoveHelper()->StartSound( mv->GetAbsOrigin(), "Player.Swim" );
 }
 
-
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -2640,8 +2643,50 @@ bool CGameMovement::CheckJumpButton( void )
 		return false;
 	}
 
+#ifdef CRUN_DLL
 	// No more effect
- 	if (player->GetGroundEntity() == NULL)
+	bool wallJump = false;
+	trace_t tr;
+
+	Vector forward, right, up;
+	Vector wallJumpDir;
+
+	if (player->GetGroundEntity() == NULL && (mv->m_nButtons & IN_MOVELEFT || mv->m_nButtons & IN_MOVERIGHT))
+	{
+		player->GetVectors(&forward, &right, &up);
+		forward.NormalizeInPlace();
+		up.NormalizeInPlace();
+		right.NormalizeInPlace();
+
+		if (mv->m_nButtons & IN_MOVELEFT)
+			wallJumpDir = -right;
+		else
+			wallJumpDir = right;
+
+		Ray_t ray;
+		ray.Init(mv->GetAbsOrigin(), mv->GetAbsOrigin() + (wallJumpDir * 8.0f), player->GetPlayerMins(), player->GetPlayerMaxs());
+
+ 		UTIL_TraceRay(ray, MASK_PLAYERSOLID_BRUSHONLY, player, COLLISION_GROUP_PLAYER_MOVEMENT, &tr);
+ 		wallJump = tr.DidHitWorld();
+
+		if (wallJump)
+		{
+			float punch = (wallJumpDir.x * 4);
+			player->ViewPunch(QAngle(punch, - fabsf(punch / 2), 0));
+
+			if (mv->m_nButtons & IN_MOVELEFT)
+				mv->m_nLastWallJumpButton = IN_MOVELEFT;
+			else
+				mv->m_nLastWallJumpButton = IN_MOVERIGHT;
+		}
+	}
+#endif
+
+ 	if (player->GetGroundEntity() == NULL 
+#ifdef CRUN_DLL
+		&& !wallJump
+#endif
+		)
 	{
 		mv->m_nOldButtons |= IN_JUMP;
 		return false;		// in air, so no effect
@@ -2699,90 +2744,141 @@ bool CGameMovement::CheckJumpButton( void )
 
 	// Acclerate upward
 	// If we are ducking...
-	float startz = mv->m_vecVelocity[2];
-	if ( (  player->m_Local.m_bDucking ) || (  player->GetFlags() & FL_DUCKING ) )
+#ifdef CRUN_DLL
+	if (!wallJump)
+#endif
 	{
-		// d = 0.5 * g * t^2		- distance traveled with linear accel
-		// t = sqrt(2.0 * 45 / g)	- how long to fall 45 units
-		// v = g * t				- velocity at the end (just invert it to jump up that high)
-		// v = g * sqrt(2.0 * 45 / g )
-		// v^2 = g * g * 2.0 * 45 / g
-		// v = sqrt( g * 2.0 * 45 )
-		mv->m_vecVelocity[2] = flGroundFactor * flMul;  // 2 * gravity * height
-	}
-	else
-	{
-		mv->m_vecVelocity[2] += flGroundFactor * flMul;  // 2 * gravity * height
-	}
-
-	// Add a little forward velocity based on your current forward velocity - if you are not sprinting.
-#if defined( HL2_DLL ) || defined( HL2_CLIENT_DLL )
-
-	bool bAllowBunnyHopperSpeedBoost = ( gpGlobals->maxClients == 1 );
-
-
-	if ( bAllowBunnyHopperSpeedBoost )
-	{
-		CHLMoveData *pMoveData = ( CHLMoveData* )mv;
-		Vector vecForward;
-		AngleVectors( mv->m_vecViewAngles, &vecForward );
-		vecForward.z = 0;
-		VectorNormalize( vecForward );
-		
-		// We give a certain percentage of the current forward movement as a bonus to the jump speed.  That bonus is clipped
-		// to not accumulate over time.
-		float flSpeedBoostPerc = ( !pMoveData->m_bIsSprinting && !player->m_Local.m_bDucked ) ? 0.5f : 0.1f;
-		float flSpeedAddition = fabs( mv->m_flForwardMove * flSpeedBoostPerc );
-		float flMaxSpeed = mv->m_flMaxSpeed + ( mv->m_flMaxSpeed * flSpeedBoostPerc );
-		float flNewSpeed = ( flSpeedAddition + mv->m_vecVelocity.Length2D() );
-
-		// If we're over the maximum, we want to only boost as much as will get us to the goal speed
-		if ( flNewSpeed > flMaxSpeed )
+		float startz = mv->m_vecVelocity[2];
+		if ((player->m_Local.m_bDucking) || (player->GetFlags() & FL_DUCKING))
 		{
-			flSpeedAddition -= flNewSpeed - flMaxSpeed;
+			// d = 0.5 * g * t^2		- distance traveled with linear accel
+			// t = sqrt(2.0 * 45 / g)	- how long to fall 45 units
+			// v = g * t				- velocity at the end (just invert it to jump up that high)
+			// v = g * sqrt(2.0 * 45 / g )
+			// v^2 = g * g * 2.0 * 45 / g
+			// v = sqrt( g * 2.0 * 45 )
+			mv->m_vecVelocity[2] = flGroundFactor * flMul;  // 2 * gravity * height
+		}
+		else
+		{
+			mv->m_vecVelocity[2] += flGroundFactor * flMul;  // 2 * gravity * height
 		}
 
-		if ( mv->m_flForwardMove < 0.0f )
-			flSpeedAddition *= -1.0f;
+		// Add a little forward velocity based on your current forward velocity - if you are not sprinting.
+#if defined( HL2_DLL ) || defined( HL2_CLIENT_DLL )
 
-		// Add it on
-		VectorAdd( (vecForward*flSpeedAddition), mv->m_vecVelocity, mv->m_vecVelocity );
-	}
+		bool bAllowBunnyHopperSpeedBoost = (gpGlobals->maxClients == 1);
+
+
+		if (bAllowBunnyHopperSpeedBoost)
+		{
+			CHLMoveData *pMoveData = (CHLMoveData*)mv;
+			Vector vecForward;
+			AngleVectors(mv->m_vecViewAngles, &vecForward);
+			vecForward.z = 0;
+			VectorNormalize(vecForward);
+
+			// We give a certain percentage of the current forward movement as a bonus to the jump speed.  That bonus is clipped
+			// to not accumulate over time.
+			float flSpeedBoostPerc = (!pMoveData->m_bIsSprinting && !player->m_Local.m_bDucked) ? 0.5f : 0.1f;
+			float flSpeedAddition = fabs(mv->m_flForwardMove * flSpeedBoostPerc);
+			float flMaxSpeed = mv->m_flMaxSpeed + (mv->m_flMaxSpeed * flSpeedBoostPerc);
+			float flNewSpeed = (flSpeedAddition + mv->m_vecVelocity.Length2D());
+
+			// If we're over the maximum, we want to only boost as much as will get us to the goal speed
+			if (flNewSpeed > flMaxSpeed)
+			{
+				flSpeedAddition -= flNewSpeed - flMaxSpeed;
+			}
+
+			if (mv->m_flForwardMove < 0.0f)
+				flSpeedAddition *= -1.0f;
+
+			// Add it on
+			VectorAdd((vecForward*flSpeedAddition), mv->m_vecVelocity, mv->m_vecVelocity);
+		}
 #endif
 
-	FinishGravity();
+		FinishGravity();
 
-	CheckV( player->CurrentCommandNumber(), "CheckJump", mv->m_vecVelocity );
+		CheckV(player->CurrentCommandNumber(), "CheckJump", mv->m_vecVelocity);
 
-	mv->m_outJumpVel.z += mv->m_vecVelocity[2] - startz;
-	mv->m_outStepHeight += 0.15f;
-
-
-	bool bSetDuckJump = (gpGlobals->maxClients == 1); //most games we only set duck jump if the game is single player
+		mv->m_outJumpVel.z += mv->m_vecVelocity[2] - startz;
+		mv->m_outStepHeight += 0.15f;
 
 
-	// Set jump time.
-	if ( bSetDuckJump )
-	{
-		player->m_Local.m_nJumpTimeMsecs = GAMEMOVEMENT_JUMP_TIME;
-		player->m_Local.m_bInDuckJump = true;
-	}
+		bool bSetDuckJump = (gpGlobals->maxClients == 1); //most games we only set duck jump if the game is single player
+
+
+		// Set jump time.
+		if (bSetDuckJump)
+		{
+			player->m_Local.m_nJumpTimeMsecs = GAMEMOVEMENT_JUMP_TIME;
+			player->m_Local.m_bInDuckJump = true;
+		}
 
 #if defined( HL2_DLL )
 
-	if ( xc_uncrouch_on_jump.GetBool() )
-	{
-		// Uncrouch when jumping
-		if ( player->GetToggledDuckState() )
+		if (xc_uncrouch_on_jump.GetBool())
 		{
-			player->ToggleDuck();
+			// Uncrouch when jumping
+			if (player->GetToggledDuckState())
+			{
+				player->ToggleDuck();
+			}
 		}
-	}
 
 #endif
 
-	// Flag that we jumped.
-	mv->m_nOldButtons |= IN_JUMP;	// don't jump again until released
+		// Flag that we jumped.
+		mv->m_nOldButtons |= IN_JUMP;	// don't jump again until released
+	}
+#ifdef CRUN_DLL
+	else
+	{
+		auto startVelocity = mv->m_vecVelocity;
+		auto& velocity = mv->m_vecVelocity;
+
+		if ((player->m_Local.m_bDucking) || (player->GetFlags() & FL_DUCKING))
+		{
+			// d = 0.5 * g * t^2		- distance traveled with linear accel
+			// t = sqrt(2.0 * 45 / g)	- how long to fall 45 units
+			// v = g * t				- velocity at the end (just invert it to jump up that high)
+			// v = g * sqrt(2.0 * 45 / g )
+			// v^2 = g * g * 2.0 * 45 / g
+			// v = sqrt( g * 2.0 * 45 )
+			velocity[2] = flMul * 0.81f;  // 2 * gravity * height
+			velocity += wallJumpDir * (flMul) * -1.0f;  // 2 * gravity * height
+		}
+		else
+		{
+			velocity[2] += flMul * 0.81f;  // 2 * gravity * height
+			velocity += wallJumpDir * (flMul) * -1.0f;
+		}
+
+		FinishGravity();
+
+		CheckV(player->CurrentCommandNumber(), "CheckJump", mv->m_vecVelocity);
+
+		mv->m_outJumpVel += mv->m_vecVelocity - startVelocity;
+		mv->m_outStepHeight += 0.15f;
+
+
+		bool bSetDuckJump = (gpGlobals->maxClients == 1); //most games we only set duck jump if the game is single player
+
+
+														  // Set jump time.
+		if (bSetDuckJump)
+		{
+			player->m_Local.m_nJumpTimeMsecs = GAMEMOVEMENT_JUMP_TIME;
+			player->m_Local.m_bInDuckJump = true;
+		}
+
+		// Flag that we jumped.
+		mv->m_nOldButtons |= IN_JUMP;	// don't jump again until released
+	}
+#endif
+
 	return true;
 }
 
