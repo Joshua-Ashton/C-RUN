@@ -75,3 +75,5 @@ game/crun/save
 src/.vs
 
 game/bin/GameConfig\.txt\.txt
+
+game/crun/run_mod\.bat
