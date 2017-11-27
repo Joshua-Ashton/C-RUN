@@ -1,0 +1,6 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "PRD-tex/brick/brick_grey_001b"
+	"$surfaceprop" "brick"
+	"$bumpmap" "normals/brickbmp/001b_bump"
+}

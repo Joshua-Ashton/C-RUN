@@ -1,0 +1,6 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "PRD-tex/dev/devgrid_02h"
+	"$surfaceprop" "concrete"
+	"$bumpmap" "normals/devbmp/devgrid_normal"
+}
