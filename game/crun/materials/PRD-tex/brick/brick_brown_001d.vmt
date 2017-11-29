@@ -2,5 +2,4 @@
 {
 	"$basetexture" "PRD-tex/brick/brick_brown_001d"
 	"$surfaceprop" "brick"
-	"$bumpmap" "normals/brickbmp/001d_bump"
 }

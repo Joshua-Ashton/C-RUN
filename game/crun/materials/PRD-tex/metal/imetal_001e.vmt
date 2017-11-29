@@ -2,5 +2,4 @@
 {
 	"$basetexture" "PRD-tex/metal/imetal_001e"
 	"$surfaceprop" "metal"
-	"$bumpmap" "normals/metalbmp/imetal_normal"
 }

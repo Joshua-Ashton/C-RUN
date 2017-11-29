@@ -2,5 +2,4 @@
 {
 	"$basetexture" "PRD-tex/concrete/Cobbledcrete_001d"
 	"$surfaceprop" "concrete"
-	"$bumpmap" "normals/concretebmp/Cobbledcrete_001_bump_tile"
 }
