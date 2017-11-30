@@ -1,0 +1,5 @@
+"LightmappedGeneric"
+{
+	"$basetexture" "PRD-tex/concrete/roofwall_001g"
+	"$surfaceprop" "concrete"
+}
