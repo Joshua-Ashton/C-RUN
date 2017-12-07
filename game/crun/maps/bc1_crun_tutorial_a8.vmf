@@ -2,7 +2,7 @@ versioninfo
 {
 	"editorversion" "400"
 	"editorbuild" "7397"
-	"mapversion" "277"
+	"mapversion" "279"
 	"formatversion" "100"
 	"prefab" "0"
 }
@@ -20,7 +20,7 @@ viewsettings
 world
 {
 	"id" "1"
-	"mapversion" "277"
+	"mapversion" "279"
 	"classname" "worldspawn"
 	"detailmaterial" "detail/detailsprites"
 	"detailvbsp" "detail.vbsp"
@@ -41821,7 +41821,7 @@ world
 	}
 	solid
 	{
-		"id" "56499"
+		"id" "56503"
 		side
 		{
 			"id" "54189"
@@ -41890,7 +41890,7 @@ world
 		}
 		editor
 		{
-			"color" "0 248 121"
+			"color" "0 118 219"
 			"visgroupshown" "1"
 			"visgroupautoshown" "1"
 			"cordonsolid" "1"
@@ -41898,7 +41898,7 @@ world
 	}
 	solid
 	{
-		"id" "56501"
+		"id" "56505"
 		side
 		{
 			"id" "54195"
@@ -41967,7 +41967,7 @@ world
 		}
 		editor
 		{
-			"color" "0 248 121"
+			"color" "0 118 219"
 			"visgroupshown" "1"
 			"visgroupautoshown" "1"
 			"cordonsolid" "1"
@@ -41975,7 +41975,7 @@ world
 	}
 	solid
 	{
-		"id" "56503"
+		"id" "56507"
 		side
 		{
 			"id" "54201"
@@ -42044,7 +42044,7 @@ world
 		}
 		editor
 		{
-			"color" "0 248 121"
+			"color" "0 118 219"
 			"visgroupshown" "1"
 			"visgroupautoshown" "1"
 			"cordonsolid" "1"
@@ -42052,7 +42052,7 @@ world
 	}
 	solid
 	{
-		"id" "56505"
+		"id" "56509"
 		side
 		{
 			"id" "54207"
@@ -42121,7 +42121,7 @@ world
 		}
 		editor
 		{
-			"color" "0 248 121"
+			"color" "0 118 219"
 			"visgroupshown" "1"
 			"visgroupautoshown" "1"
 			"cordonsolid" "1"
@@ -42129,7 +42129,7 @@ world
 	}
 	solid
 	{
-		"id" "56507"
+		"id" "56511"
 		side
 		{
 			"id" "54213"
@@ -42198,7 +42198,7 @@ world
 		}
 		editor
 		{
-			"color" "0 248 121"
+			"color" "0 118 219"
 			"visgroupshown" "1"
 			"visgroupautoshown" "1"
 			"cordonsolid" "1"
@@ -42206,7 +42206,7 @@ world
 	}
 	solid
 	{
-		"id" "56509"
+		"id" "56513"
 		side
 		{
 			"id" "54219"
@@ -42275,7 +42275,7 @@ world
 		}
 		editor
 		{
-			"color" "0 248 121"
+			"color" "0 118 219"
 			"visgroupshown" "1"
 			"visgroupautoshown" "1"
 			"cordonsolid" "1"
