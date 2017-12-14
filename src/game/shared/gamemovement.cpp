@@ -776,6 +776,11 @@ float CGameMovement::GetAccelerate()
 float CGameMovement::GetFriction()
 {
 #ifdef CRUN_DLL
+	
+	CBaseEntity* groundEntity = player->GetGroundEntity();
+	if (groundEntity && FClassnameIs(groundEntity, "func_slippery"))
+		return crun_slide_friction.GetFloat();
+
 	if (mv->m_nButtons & IN_DUCK)
 	{
 		if (mv->m_vecVelocity.Length() > crun_walkspeed.GetFloat())

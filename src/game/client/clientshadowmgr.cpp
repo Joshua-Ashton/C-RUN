@@ -135,13 +135,21 @@ ConVar r_flashlightdepthtexture( "r_flashlightdepthtexture", "1" );
 #if defined( _X360 )
 ConVar r_flashlightdepthreshigh( "r_flashlightdepthreshigh", "720" );
 #else
+#ifndef CRUN_DLL
 ConVar r_flashlightdepthreshigh( "r_flashlightdepthreshigh", "4096" ); //8192
+#else
+ConVar r_flashlightdepthreshigh("r_flashlightdepthreshigh_dontchangeme", "128", FCVAR_DEVELOPMENTONLY);
+#endif
 #endif
 
 #if defined( _X360 )
 ConVar r_flashlightdepthres( "r_flashlightdepthres", "720" );
 #else
-ConVar r_flashlightdepthres("r_flashlightdepthres", "4096", FCVAR_ARCHIVE, "Flashlight depth resolution");
+#ifndef CRUN_DLL
+ConVar r_flashlightdepthres("r_flashlightdepthres", "4096");
+#else
+ConVar r_flashlightdepthres("r_flashlightdepthres_dontchangeme", "128", FCVAR_DEVELOPMENTONLY);
+#endif
 #endif
 
 #if defined( _X360 )
@@ -212,10 +220,18 @@ private:
 		MAX_TEXTURE_POWER    	= 7,
 #else
 		TEXTURE_PAGE_SIZE	    = 1024,
+#ifdef CRUN_DLL
+		MAX_TEXTURE_POWER		= 2,
+#else
 		MAX_TEXTURE_POWER    	= 8,
 #endif
+#endif
 #if !defined( _X360 )
-		MIN_TEXTURE_POWER	    = 4,
+#ifdef CRUN_DLL
+		MIN_TEXTURE_POWER	    = 2,
+#else
+		MIN_TEXTURE_POWER		= 4,
+#endif
 #else
 		MIN_TEXTURE_POWER	    = 5,	// per resolve requirements to ensure 32x32 aligned offsets
 #endif
@@ -369,6 +385,24 @@ void CTextureAllocator::Reset()
 	m_Blocks[24].m_FragmentPower = MAX_TEXTURE_POWER;	// 199 slots total
 #else
 	// FIXME: Improve heuristic?!?
+#ifdef CRUN_DLL
+	m_Blocks[0].m_FragmentPower  = MAX_TEXTURE_POWER;
+	m_Blocks[1].m_FragmentPower  = MAX_TEXTURE_POWER;
+	m_Blocks[2].m_FragmentPower  = MAX_TEXTURE_POWER;
+	m_Blocks[3].m_FragmentPower  = MAX_TEXTURE_POWER;		 
+	m_Blocks[4].m_FragmentPower  = MAX_TEXTURE_POWER;
+	m_Blocks[5].m_FragmentPower  = MAX_TEXTURE_POWER;
+	m_Blocks[6].m_FragmentPower  = MAX_TEXTURE_POWER;
+	m_Blocks[7].m_FragmentPower  = MAX_TEXTURE_POWER;
+	m_Blocks[8].m_FragmentPower  = MAX_TEXTURE_POWER;
+	m_Blocks[9].m_FragmentPower  = MAX_TEXTURE_POWER;
+	m_Blocks[10].m_FragmentPower = MAX_TEXTURE_POWER;
+	m_Blocks[11].m_FragmentPower = MAX_TEXTURE_POWER;	 
+	m_Blocks[12].m_FragmentPower = MAX_TEXTURE_POWER;
+	m_Blocks[13].m_FragmentPower = MAX_TEXTURE_POWER;
+	m_Blocks[14].m_FragmentPower = MAX_TEXTURE_POWER;
+	m_Blocks[15].m_FragmentPower = MAX_TEXTURE_POWER;
+#else
 #if !defined( _X360 )
 	m_Blocks[0].m_FragmentPower  = MAX_TEXTURE_POWER-4;	// 128 cells at ExE resolution
 #else
@@ -389,6 +423,7 @@ void CTextureAllocator::Reset()
 	m_Blocks[13].m_FragmentPower = MAX_TEXTURE_POWER;
 	m_Blocks[14].m_FragmentPower = MAX_TEXTURE_POWER;
 	m_Blocks[15].m_FragmentPower = MAX_TEXTURE_POWER;	// 190 slots total on 360
+#endif
 #endif
 
 
@@ -1632,6 +1667,7 @@ void CClientShadowMgr::InitDepthTextureShadows()
 #if !defined( _X360 )
 		ImageFormat nullFormat = g_pMaterialSystemHardwareConfig->GetNullTextureFormat();			// Vendor-dependent null texture format (takes as little memory as possible)
 #endif
+		materials->ReEnableRenderTargetAllocation_IRealizeIfICallThisAllTexturesWillBeUnloadedAndLoadTimeWillSufferHorribly();
 		materials->BeginRenderTargetAllocation();
 
 #if defined( _X360 )
@@ -1702,6 +1738,7 @@ void CClientShadowMgr::InitRenderToTextureShadows()
 	{
 		m_RenderToTextureActive = true;
 
+		materials->ReEnableRenderTargetAllocation_IRealizeIfICallThisAllTexturesWillBeUnloadedAndLoadTimeWillSufferHorribly();
 		g_pMaterialSystem->BeginRenderTargetAllocation();
 		m_ShadowAllocator.Init();
 		g_pMaterialSystem->EndRenderTargetAllocation();
