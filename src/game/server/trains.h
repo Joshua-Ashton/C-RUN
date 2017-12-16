@@ -82,17 +82,17 @@ public:
 
 	void SetTrack( CPathTrack *track ) { m_ppath = track->Nearest(GetLocalOrigin()); }
 	void SetControls( CBaseEntity *pControls );
-	bool OnControls( CBaseEntity *pControls );
+	virtual bool OnControls( CBaseEntity *pControls );
 
 	void SoundStop( void );
 	void SoundUpdate( void );
 
 	void Start( void );
-	void Stop( void );
+	virtual void Stop( void );
 
 	bool IsDirForward();
 	void SetDirForward( bool bForward );
-	void SetSpeed( float flSpeed, bool bAccel = false );
+	virtual void SetSpeed( float flSpeed, bool bAccel = false );
 	void Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value );
 	
 	// Input handlers
@@ -138,13 +138,13 @@ public:
 	CPathTrack	*m_ppath;
 	float		m_length;
 	
-private:
+protected:
 
 	TrainVelocityType_t GetTrainVelocityType();
 	void UpdateTrainVelocity( CPathTrack *pnext, CPathTrack *pNextNext, const Vector &nextPos, float flInterval );
 
 	TrainOrientationType_t GetTrainOrientationType();
-	void UpdateTrainOrientation( CPathTrack *pnext, CPathTrack *pNextNext, const Vector &nextPos, float flInterval );
+	virtual void UpdateTrainOrientation( CPathTrack *pnext, CPathTrack *pNextNext, const Vector &nextPos, float flInterval );
 	void UpdateOrientationAtPathTracks( CPathTrack *pnext, CPathTrack *pNextNext, const Vector &nextPos, float flInterval );
 	void UpdateOrientationBlend( TrainOrientationType_t eOrientationType, CPathTrack *pPrev, CPathTrack *pNext, const Vector &nextPos, float flInterval );
 	void DoUpdateOrientation( const QAngle &curAngles, const QAngle &angles, float flInterval );

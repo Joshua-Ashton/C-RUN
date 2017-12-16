@@ -34,3 +34,15 @@
 	input SetExcluded( string ) : "Change the NPC class excluded from collisions"
 	input SetInvert( integer ) : "Set the state of invversion for NPC class exclusion (0 or 1)"
 ]
+
+@SolidClass base(func_tracktrain) = func_fancytrain :
+	"A moving platform that the player can ride. It follows a path of path_track entities.\n" +
+	"NOTE: Build your train so that the front of the train is facing down the X axis. " +
+	"When it spawns it will automatically rotate to face the next path_track on the path."
+[
+	input ApplyBrakes(float) : "Apply the brakes of the train. Given float is time to stop."
+	input DisableControls(void) : "Disable control of the train."
+	input EnableControls(void) : "Enable control of the train."
+	input SetManualAccelSpeed(float) : "Set the speed the train accelerates at."
+	input SetManualDecelSpeed(float) : "Set the speed the train accelerates at."
+]
