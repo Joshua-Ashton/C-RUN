@@ -44,5 +44,5 @@
 	input DisableControls(void) : "Disable control of the train."
 	input EnableControls(void) : "Enable control of the train."
 	input SetManualAccelSpeed(float) : "Set the speed the train accelerates at."
-	input SetManualDecelSpeed(float) : "Set the speed the train accelerates at."
+	input SetManualDecelSpeed(float) : "Set the speed the train decelerates at."
 ]
