@@ -144,6 +144,8 @@ Class_T  CSDKPlayer::Classify ( void )
 	return CLASS_PLAYER;
 }
 
+extern int TrainSpeed(int iSpeed, int iMax);
+
 void CSDKPlayer::PreThink()
 {
 	BaseClass::PreThink();
@@ -151,6 +153,94 @@ void CSDKPlayer::PreThink()
 
 	if ( m_pHintMessageQueue )
 		m_pHintMessageQueue->Update();
+
+	if (m_afPhysicsFlags & PFLAG_DIROVERRIDE)
+		AddFlag(FL_ONTRAIN);
+	else
+		RemoveFlag(FL_ONTRAIN);
+
+	if (m_afPhysicsFlags & PFLAG_DIROVERRIDE)
+	{
+		CBaseEntity *pTrain = GetGroundEntity();
+		float vel;
+
+		if (pTrain)
+		{
+			if (!(pTrain->ObjectCaps() & FCAP_DIRECTIONAL_USE))
+				pTrain = NULL;
+		}
+
+		if (!pTrain)
+		{
+			if (GetActiveWeapon() && (GetActiveWeapon()->ObjectCaps() & FCAP_DIRECTIONAL_USE))
+			{
+				m_iTrain = TRAIN_ACTIVE | TRAIN_NEW;
+
+				if (m_nButtons & IN_FORWARD)
+				{
+					m_iTrain |= TRAIN_FAST;
+				}
+				else if (m_nButtons & IN_BACK)
+				{
+					m_iTrain |= TRAIN_BACK;
+				}
+				else
+				{
+					m_iTrain |= TRAIN_NEUTRAL;
+				}
+				return;
+			}
+			else
+			{
+				trace_t trainTrace;
+				// Maybe this is on the other side of a level transition
+				UTIL_TraceLine(GetAbsOrigin(), GetAbsOrigin() + Vector(0, 0, -38),
+					MASK_PLAYERSOLID_BRUSHONLY, this, COLLISION_GROUP_NONE, &trainTrace);
+
+				if (trainTrace.fraction != 1.0 && trainTrace.m_pEnt)
+					pTrain = trainTrace.m_pEnt;
+
+
+				if (!pTrain || !(pTrain->ObjectCaps() & FCAP_DIRECTIONAL_USE) || !pTrain->OnControls(this))
+				{
+					//					Warning( "In train mode with no train!\n" );
+					m_afPhysicsFlags &= ~PFLAG_DIROVERRIDE;
+					m_iTrain = TRAIN_NEW | TRAIN_OFF;
+					return;
+				}
+			}
+		}
+		else if (!(GetFlags() & FL_ONGROUND) || pTrain->HasSpawnFlags(SF_TRACKTRAIN_NOCONTROL) || (m_nButtons & (IN_MOVELEFT | IN_MOVERIGHT)))
+		{
+			// Turn off the train if you jump, strafe, or the train controls go dead
+			m_afPhysicsFlags &= ~PFLAG_DIROVERRIDE;
+			m_iTrain = TRAIN_NEW | TRAIN_OFF;
+			return;
+		}
+
+		SetAbsVelocity(vec3_origin);
+		vel = 0;
+		if (m_afButtonPressed & IN_FORWARD)
+		{
+			vel = 1;
+			pTrain->Use(this, this, USE_SET, (float)vel);
+		}
+		else if (m_afButtonPressed & IN_BACK)
+		{
+			vel = -1;
+			pTrain->Use(this, this, USE_SET, (float)vel);
+		}
+
+		if (vel)
+		{
+			m_iTrain = TrainSpeed(pTrain->m_flSpeed, ((CFuncTrackTrain*)pTrain)->GetMaxSpeed());
+			m_iTrain |= TRAIN_ACTIVE | TRAIN_NEW;
+		}
+	}
+	else if (m_iTrain & TRAIN_ACTIVE)
+	{
+		m_iTrain = TRAIN_NEW; // turn off train
+	}
 }
 
 void CSDKPlayer::PostThink()
@@ -591,6 +681,18 @@ void CSDKPlayer::PlayerUse ( void )
 				m_afPhysicsFlags &= ~PFLAG_DIROVERRIDE;
 				m_iTrain = TRAIN_NEW|TRAIN_OFF;
 				return;
+			}
+			else
+			{	// Start controlling the train!
+				CBaseEntity *pTrain = GetGroundEntity();
+				if (pTrain && !(m_nButtons & IN_JUMP) && (GetFlags() & FL_ONGROUND) && (pTrain->ObjectCaps() & FCAP_DIRECTIONAL_USE) && pTrain->OnControls(this))
+				{
+					m_afPhysicsFlags |= PFLAG_DIROVERRIDE;
+					m_iTrain = TrainSpeed(pTrain->m_flSpeed, ((CFuncTrackTrain*)pTrain)->GetMaxSpeed());
+					m_iTrain |= TRAIN_NEW;
+					EmitSound("CRUN.TrainUse");
+					return;
+				}
 			}
 		}
 

@@ -729,7 +729,7 @@ void CViewRender::SetUpView()
 	float flFOVOffset = default_fov.GetFloat() - view.fov;
 
 	//Adjust the viewmodel's FOV to move with any FOV offsets on the viewer's end
-	view.fovViewmodel = GetClientMode()->GetViewModelFOV() - flFOVOffset;
+	view.fovViewmodel = MAX(GetClientMode()->GetViewModelFOV() - flFOVOffset, 0.1f);
 
 	// Compute the world->main camera transform
 	ComputeCameraVariables( view.origin, view.angles, 
