@@ -48,6 +48,9 @@ $Project "Client (CRUN)"
 			$File	"crun\c_sdk_player.cpp"
 			$File	"crun\c_weapon__stubs.cpp"
 			
+			$File	"$SRCDIR\game\shared\crun\func_slippery.h"
+			$File	"$SRCDIR\game\shared\crun\func_slippery.cpp"
+			
 			$File	"crun\hud_crosshair_crun.cpp"
 			$File	"crun\hud_damageindicator.cpp"
 			$File	"crun\hud_developer.cpp"

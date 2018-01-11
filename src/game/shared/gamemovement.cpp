@@ -773,13 +773,19 @@ float CGameMovement::GetAccelerate()
 	return sv_accelerate.GetFloat();
 }
 
+#include "func_slippery.h"
+
 float CGameMovement::GetFriction()
 {
 #ifdef CRUN_DLL
-	
-	CBaseEntity* groundEntity = player->GetGroundEntity();
-	if (groundEntity && FClassnameIs(groundEntity, "func_slippery"))
-		return crun_slide_friction.GetFloat();
+	CFuncSlippery* slipperyOverride = dynamic_cast<CFuncSlippery*>(player->GetGroundEntity());
+	if (slipperyOverride)
+	{
+		if (mv->m_nButtons & IN_DUCK)
+			return slipperyOverride->GetFriction() + slipperyOverride->GetExtraDuckingFriction();
+		else
+			return slipperyOverride->GetFriction();
+	}
 
 	if (mv->m_nButtons & IN_DUCK)
 	{

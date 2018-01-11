@@ -26,6 +26,8 @@
 		1 : "Yes"
 	]	
 
+	friction(float) : "Friction" : 0 : "What should the friction override be for this?"
+	extraduckingfriction(float) : "Extra Ducking Friction" : 0 : "The amount of extra friction when the player is ducking."
 	solidbsp(boolean) : "Solid BSP" : 0 : "Set this if this brush is in heirarchy with a moving object of some kind, and the player can stand on this brush."
 
 	vrad_brush_cast_shadows(boolean) : "Shadows" : 0 : "Set this if this brush casts lightmap shadows."
@@ -33,6 +35,8 @@
 	input Alpha(integer) : "Sets the brush's alpha value."
 	input SetExcluded( string ) : "Change the NPC class excluded from collisions"
 	input SetInvert( integer ) : "Set the state of invversion for NPC class exclusion (0 or 1)"
+	input SetFriction( float ) : "Set how slipppppy it is."
+	input SetExtraDuckingFriction( float ) : "Set how slipppppy it is when ya ducking."
 ]
 
 @SolidClass base(func_tracktrain) = func_fancytrain :
@@ -46,7 +50,7 @@
 	input SetManualAccelSpeed(float) : "Set the speed the train accelerates at."
 	input SetManualDecelSpeed(float) : "Set the speed the train decelerates at."
 	
-	ManualSpeedChanges(bool) : "Manual Speed Changes" : 0 : ""
+	ManualSpeedChanges(boolean) : "Manual Speed Changes" : 0 : ""
 	ManualAccelSpeed(float) : "Acceleration Speed" : 200 : ""
 	ManualDecelSpeed(float) : "Deceleration Speed" : 100 : ""
 ]
