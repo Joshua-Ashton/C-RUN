@@ -26,8 +26,18 @@
 		1 : "Yes"
 	]	
 
+	input SetFriction( float ) : "Set how slipppppy it is."
 	friction(float) : "Friction" : 0 : "What should the friction override be for this?"
+	
 	extraduckingfriction(float) : "Extra Ducking Friction" : 0 : "The amount of extra friction when the player is ducking."
+	input SetExtraDuckingFriction( float ) : "Set how slipppppy it is when ya ducking."
+	
+	disablefrictionchanges(boolean) : "Disable Friction Changes" : 0 : "Should we use the friction values of me?"
+	input SetDisableFrictionChanges( integer ) : "Should we use my friction values"
+	
+	disableplayermovement(boolean) : "Disable Player Movement" : 0 : "Should we disable player movement when we're on this?"
+	input SetDisablePlayerMovement( integer ) : "Should we stop the moving boi from moving?"
+	
 	solidbsp(boolean) : "Solid BSP" : 0 : "Set this if this brush is in heirarchy with a moving object of some kind, and the player can stand on this brush."
 
 	vrad_brush_cast_shadows(boolean) : "Shadows" : 0 : "Set this if this brush casts lightmap shadows."
@@ -35,8 +45,6 @@
 	input Alpha(integer) : "Sets the brush's alpha value."
 	input SetExcluded( string ) : "Change the NPC class excluded from collisions"
 	input SetInvert( integer ) : "Set the state of invversion for NPC class exclusion (0 or 1)"
-	input SetFriction( float ) : "Set how slipppppy it is."
-	input SetExtraDuckingFriction( float ) : "Set how slipppppy it is when ya ducking."
 ]
 
 @SolidClass base(func_tracktrain) = func_fancytrain :

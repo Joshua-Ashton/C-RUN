@@ -2188,7 +2188,9 @@ void CGameMovement::WalkMove( void )
 	VectorCopy (wishvel, wishdir);   // Determine maginitude of speed of move
 
 #ifdef CRUN_DLL
-	if (mv->m_nButtons & IN_DUCK && mv->m_vecVelocity.Length() > crun_walkspeed.GetFloat())
+
+	CFuncSlippery* slipperyOverride = dynamic_cast<CFuncSlippery*>(player->GetGroundEntity());
+	if ((((mv->m_nButtons & IN_DUCK && (mv->m_vecVelocity.Length() > crun_walkspeed.GetFloat()) || (slipperyOverride && (mv->m_vecVelocity.Length() > crun_walkspeed.GetFloat() * 0.8f))) || slipperyOverride->GetDisablePlayerMovement()))
 		wishdir = mv->m_vecVelocity;
 #endif
 
