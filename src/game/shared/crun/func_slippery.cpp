@@ -3,6 +3,7 @@
 
 BEGIN_DATADESC(CFuncSlippery)
 	DEFINE_FIELD_NAME(m_fFriction, "friction", FIELD_FLOAT),
+	DEFINE_FIELD_NAME(m_fExtraDuckingFriction, "extraduckingfriction", FIELD_FLOAT),
 #ifdef GAME_DLL
 	DEFINE_INPUTFUNC(FIELD_FLOAT, "SetFriction", InputSetFriction),
 	DEFINE_INPUTFUNC(FIELD_FLOAT, "SetExtraDuckingFriction", InputSetExtraDuckingFriction)
