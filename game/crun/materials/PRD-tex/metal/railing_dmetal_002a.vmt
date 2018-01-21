@@ -1,6 +1,5 @@
 "LightmappedGeneric"
 {
 	"$basetexture" "PRD-tex/metal/railing_dmetal_002a"
-	"$translucent" 1
 	"$surfaceprop" "metal"
 }
